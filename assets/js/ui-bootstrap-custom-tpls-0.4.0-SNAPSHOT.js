@@ -1,5 +1,3 @@
-angular.module("ui.bootstrap", ["ui.bootstrap.tpls", "ui.bootstrap.tabs"]);
-angular.module("ui.bootstrap.tpls", ["template/tabs/pane.html","template/tabs/tabs.html"]);
 angular.module('ui.bootstrap.tabs', [])
 .controller('TabsController', ['$scope', '$element', function($scope, $element) {
   var panes = $scope.panes = [];
@@ -33,7 +31,7 @@ angular.module('ui.bootstrap.tabs', [])
     transclude: true,
     scope: {},
     controller: 'TabsController',
-    templateUrl: 'template/tabs/tabs.html',
+    templateUrl: 'assets/template/tabs/tabs.html',
     replace: true
   };
 })
@@ -71,26 +69,7 @@ angular.module('ui.bootstrap.tabs', [])
         tabsCtrl.removePane(scope);
       });
     },
-    templateUrl: 'template/tabs/pane.html',
+    templateUrl: 'assets/template/tabs/pane.html',
     replace: true
   };
-}]);
-
-angular.module("template/tabs/pane.html", []).run(["$templateCache", function($templateCache){
-  $templateCache.put("template/tabs/pane.html",
-    "<div class=\"tab-pane\" ng-class=\"{active: selected}\" ng-show=\"selected\" ng-transclude></div>" +
-    "");
-}]);
-
-angular.module("template/tabs/tabs.html", []).run(["$templateCache", function($templateCache){
-  $templateCache.put("template/tabs/tabs.html",
-    "<div class=\"tabbable\">" +
-    "  <ul class=\"nav nav-tabs\">" +
-    "    <li ng-repeat=\"pane in panes\" ng-class=\"{active:pane.selected}\">" +
-    "      <a ng-click=\"select(pane)\">{{pane.heading}}</a>" +
-    "    </li>" +
-    "  </ul>" +
-    "  <div class=\"tab-content\" ng-transclude></div>" +
-    "</div>" +
-    "");
 }]);
