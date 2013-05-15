@@ -1,0 +1,15 @@
+{
+  "name": "smart-table",
+  "version": "0.0.1",
+  "description": "documentation site for Smart-Table",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Laurent Renard",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  }
+}
