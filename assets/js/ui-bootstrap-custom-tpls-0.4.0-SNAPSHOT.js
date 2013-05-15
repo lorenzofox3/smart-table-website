@@ -31,7 +31,7 @@ angular.module('ui.bootstrap.tabs', [])
     transclude: true,
     scope: {},
     controller: 'TabsController',
-    templateUrl: 'assets/template/tabs/tabs.html',
+    templateUrl: 'assets/template/tabs.html',
     replace: true
   };
 })
@@ -69,7 +69,7 @@ angular.module('ui.bootstrap.tabs', [])
         tabsCtrl.removePane(scope);
       });
     },
-    templateUrl: 'assets/template/tabs/pane.html',
+    templateUrl: 'assets/template/pane.html',
     replace: true
   };
 }]);
