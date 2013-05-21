@@ -31,16 +31,16 @@
         <h2>The basics</h2>
 
         <p>
-            If you want to display data in a table it is really easy. You simply have to add the "smart-table" directive
-            into your markup (it is an element directive) and bind the "rows" (see markup tab) attribute
+            If you want to display data in a table it is really easy. You simply have to add the <em>smart-table</em> directive
+            into your markup (it is an element directive) and bind the <em>rows</em> (see markup tab) attribute
             to an array somewhere in the scope. In our example we specify the data used to fill the table in a
-            controller (see lines 3-7 of JavaScript tab).
+            controller.
         </p>
-        <ul>
-            <li>Without anything else, the table will use all the keys (which don't start with '$' to avoid collision
+        <ul class="note">
+            <li><i class="icon-white icon-tags"></i>Without anything else, the table will use all the keys (which don't start with '$' to avoid collision
                 with angular related properties) as headers for the table
             </li>
-            <li>It will also take default configuration values : here for instance you can sort by columns as the
+            <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by columns as the
                 columns are sortable by default
             </li>
         </ul>
@@ -67,8 +67,8 @@
         </div>
         <p>
             You can also specify the layout you want. That is where we introduce the column configuration. On our markup
-            we bind the "columns" attribute to an array in which we specify
-            how to display the data. The "label" property will give the header of the column whereas the "map" property
+            we bind the <em>columns</em> attribute to an array in which we specify
+            how to display the data. The <em>label</em> property will give the header of the column whereas the <em>map</em> property
             is the property in our data-model object we want a given column
             to be bound to. A column will be inserted by column configuration.
         </p>
@@ -105,14 +105,14 @@
         <h2>Format data</h2>
         <p>
             In our previous examples the data were display as raw strings,but what if we want to format date, currency and so on in a propert way ?
-            In the column configuration, you can specify how to format the data for the given column by adding "formatFunction" and "formatParameter"
+            In the column configuration, you can specify how to format the data for the given column by adding <em>formatFunction</em> and <em>formatParameter</em>
             properties.
         </p>
         <ul>
-            <li>The "formatFunction" can be a function either a string
+            <li>The <em>formatFunction</em> can be a function either a string
                 <ul>
                     <li>If it is a string, it is expected to be one of the angular filters name. The displayed data will be as if you have used the angular filter.</li>
-                    <li>If you use a function, it must take the value to format as first parameter, then an optional "formatParameter"
+                    <li>If you use a function, it must take the value to format as first parameter, then an optional <em>formatParameter</em>
                     <pre><code class="language-javascript">function(value,formatParameter){
     //do some stuff
     return formatedValue;
@@ -121,6 +121,7 @@
                 </ul>
             </li>
             <li>The formatParameter is an optional parameter to pass to the format function. If you use one of the built in angular filter it will be for example the symbol you pass to the currency filter.</li>
+            </ul>
             <tabs>
                 <pane heading="JavaScript">
                     <pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
@@ -150,7 +151,6 @@
             <div class="table-container">
                 <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
             </div>
-        </ul>
     </section>
     <section id="section-sort" ng-controller="sortCtrl">
         <h2>Sort data</h2>
@@ -158,11 +158,11 @@
         algorithm (see below). When you click on one of the column header the orderBy algorithm will sort the data rows according to these rules
         </p>
         <ul>
-            <li>if you have set the "sortPredicate" property on the column config : it will use it as predicate for the orderBy algorithm (see angular documentation)</li>
+            <li>if you have set the <em>sortPredicate</em> property on the column config : it will use it as predicate for the orderBy algorithm (see <a href="#">angular documentation</a>)</li>
             <li>otherwise it will use the property name the column is mapped to as predicate for the orderBy algorithm (it simply means it will sort the data rows according to the clicked column values) </li>
         </ul>
 
-        <p>You can also disable the sort function for a given column by setting the "isSortable" porperty to false (it is true by default)</p>
+        <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> porperty to false (it is true by default)</p>
         <tabs>
             <pane heading="JavaScript">
                     <pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
@@ -196,7 +196,7 @@
         <h4>Use your own algorithm</h4>
         <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes
         You can bind the table-configuration attribute to an object that will represent the table "global" configuration. One of the global property is the
-        sort algorithm.
+        sort algorithm (<em>sortAlgorithm</em>).
         </p>
         <pre><code class="language-javascript">function customSortAlgorithm(arrayRef, sortPredicate, reverse){
             //do some stuff
@@ -206,8 +206,8 @@
     <section id="section-filter" ng-controller="filterCtrl">
         <h2>Search/filter data</h2>
         <p>The <a href="#">table controller API</a> gives you a way to filter the data comparing an input to both a given column values or in the whole table.
-            To display an input textbox for a global search (in the whole table) you just have to set the "isGlobalSearchActivated" property to true in the table global config object. The algorithm used
-            will be the one used bye the "filter" filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
+            To display an input textbox for a global search (in the whole table) you just have to set the <em>isGlobalSearchActivated</em> property to true in the table global config object. The algorithm used
+            will be the one used bye the <a href="#">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
         </p>
         <tabs>
             <pane heading="JavaScript">
@@ -241,7 +241,7 @@
         </div>
         <h4>Use your own algorithm</h4>
         <p>In the same way than for the sort operation you can use you own algorithm, you just have to specify the function you want to use in the global config
-        under the property "filterAlgorithm"</p>
+        under the property <em>filterAlgorithm</em></p>
         <pre><code class="language-javascript">function customFilter(arrayRef, expression){
             //do some stuff
             return filteredArray;
@@ -249,12 +249,12 @@
     </section>
     <section id="section-selection" ng-controller="selectionCtrl">
         <h2>Select data rows</h2>
-        <p>You can select data row according to two different modes : 'single' or 'multiple' (of course you can disable selection) by setting the global
-        property "selectionMode" to 'single' or 'multiple' (any other value will be taken as selectionMode='none'). This is the only time the table changes
+        <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
+        property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
          a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
         on the other hand it allows the parent scope to quickly have a list of the selected items without relying on events. If you are in selectionMode="multiple" you can add a selection checkbox
-        column by setting the global property "displaySelectionCheckbox" to true</p>
-        <p>Note that even thought the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
+        column by setting the global property <em>displaySelectionCheckbox</em> to true</p>
+        <p class="note"><i class="icon-white icon-tags"></i> Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
             to 'none' with a selected item, the item will remain selected. It is the responsability of the parent scope/controller to reset the selected item</p>
 
         <tabs>
@@ -291,7 +291,11 @@
             <label ng-show="canDisplayCheckbox()" for="selection-checkbox">display checkbox:</label>
             <input ng-show="canDisplayCheckbox()" id="selection-checkbox" type="checkbox" ng-model="globalConfig.displaySelectionCheckbox"/>
             <label>selection mode:</label>
-            <input type="text" ng-model="globalConfig.selectionMode"/>
+            <select ng-model="globalConfig.selectionMode">
+                <option value="none">none</option>
+                <option value="single">single</option>
+                <option value="multiple">multiple</option>
+            </select>
         </div>
         <ul class="output-list">
             <li ng-repeat="row in rowCollection">{{ row | json}}</li>
@@ -299,12 +303,12 @@
     </section>
         <section id="section-edit" ng-controller="editCtrl">
             <h2>Edit cell</h2>
-            <p>You can make the cells of a given column editable by simply setting the "isEditable" property to true in this column config. This will allow
+            <p>You can make the cells of a given column editable by simply setting the <em>isEditable</em> property to true in this column config. This will allow
             you to edit directly the property on the data model object. Therefore, you may want to specify which type of input the cell will accept. You just
-            have to set the "type" property to the the type you want (email, number, etc). If the input is valid the model is updated, otherwise it will keep
+            have to set the <em>type</em> property to the the type you want (email, number, etc). If the input is valid the model is updated, otherwise it will keep
             the previous value</p>
-            <p>note that the data will be filtered/sorted after editing accordingly to the last settings</p>
-            <p>Double click to edit</p>
+            <p class="note"><i class="icon-white icon-tags"></i>The data will be filtered/sorted after editing accordingly to the last settings</p>
+            <p class="note"><i class="icon-white icon-tags"></i>Double click to edit</p>
             <tabs>
                 <pane heading="javascript">
                     <pre><code class="language-javascript">app.controller('editCtrl', ['$scope', function (scope) {
@@ -339,7 +343,7 @@
         <section id="section-style" ng-controller="styleCtrl">
             <h2>Simple styling</h2>
             <p>This is simply allow you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
-            "headerClass" and "cellClass" property in the column configuration</p>
+            <em>headerClass</em> and <em>cellClass</em> property in the column configuration</p>
             <tabs>
                 <pane heading="javascript">
                     <pre><code class="language-javascript">app.controller('styleCtrl', ['$scope', function (scope) {
@@ -379,19 +383,19 @@
         </section>
     <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
         <h2>Cell Template</h2>
-        <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the "templateUrl" property in the column config
+        <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>templateUrl</em> property in the column config
         this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
         </p>
-        <pre><code class="language-javascript">scope.column;//the column ojbect
-scope.row;//the data row object
+        <pre ><code class="language-javascript">scope.column;//the column ojbect
+scope.dataRow;//the data row object
 scope.formatedValue;//the formated value (not the raw string)</code></pre>
-        <p>Note that you can use the table controller api in your directive</p>
-        <P>Note that if you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
+        <p class="note"><i class="icon-white icon-tags"></i>You can use the table controller api in your directive</p>
+        <p class="note"><i class="icon-white icon-tags"></i>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
         in your template/directive</P>
         <tabs>
             <pane heading="javascript">
-                <pre><code class="language-javascript">app.controller('cellTemplateCtrl', ['$scope', function (scope) {
+                <pre class="language-javascript"><code class="language-javascript">app.controller('cellTemplateCtrl', ['$scope', function (scope) {
     scope.rowCollection = [
         {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
@@ -399,11 +403,12 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
     ];
 
     scope.columnCollection = [
-        {label: 'First Name', map: 'firstName',templateUrl:'assets/template/custom.html'},
+        {label: 'First Name', map: 'firstName'},
         {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
-        {label: 'e-mail', map: 'email'}
+        {label: 'e-mail', map: 'email'},
+        {label: 'Favourite color',templateUrl:'assets/template/custom.html'}
     ];
 }]);</code></pre>
             </pane>
@@ -416,16 +421,28 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
                 <pre ng-non-bindable><code class="language-markup">&lt;custom>&lt;/cutsom></code></pre>
             </pane>
             <pane heading="custom.js">
-                <pre><code class="language-javascript">app.directive('custom', function () {
+                <pre><code class="language-javascript">aapp.directive('custom',function () {
     return {
         restrict:'E',
         //include smart table controller to use its API if needed
         require: '^smartTable',
-        template:'<div></div>',
+        template:'&lt;select ng-model="favouriteColor">' +
+            '&lt;option value="">--choose favorite color--&lt;/option>'+
+            '&lt;option value="red">red&lt;/option>'+
+            '&lt;option value="blue">blue&lt;/option>'+
+            '&lt;option value="yellow">yellow&lt;/option>'+
+            '&lt;/select>',
         replace:true,
         link: function (scope, element, attrs, ctrl) {
-        //use the scope
-        element.text(scope.formatedValue.toUpperCase());
+            //can use scope.dataRow, scope.column, scope.formatedValue, and ctrl API
+
+            var allowedColors=['red','yellow','blue'];
+
+            scope.$watch('favouriteColor', function (value) {
+                if(allowedColors.indexOf(value)!=-1){
+                    scope.dataRow.favouriteColor=scope.favouriteColor;
+                }
+            });
         }
     };
 });</code></pre>
@@ -434,6 +451,9 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
         <div class="table-container">
             <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
         </div>
+        <ul class="output-list">
+            <li ng-repeat="row in rowCollection">{{ row | json}}</li>
+        </ul>
     </section>
 </div>
 </body>

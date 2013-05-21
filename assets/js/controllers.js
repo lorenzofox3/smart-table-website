@@ -144,10 +144,11 @@ app.controller('cellTemplateCtrl', ['$scope', function (scope) {
     ];
 
     scope.columnCollection = [
-        {label: 'First Name', map: 'firstName',templateUrl:'assets/template/custom.html'},
+        {label: 'First Name', map: 'firstName'},
         {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
-        {label: 'e-mail', map: 'email'}
+        {label: 'e-mail', map: 'email'},
+        {label: 'Favourite color',templateUrl:'assets/template/custom.html'}
     ];
 }]);

@@ -75,15 +75,28 @@ pre {
 
 .output-list{
     display: inline-block;
-    width: 75%;
+    width: 70%;
     margin-left: 25px;
     list-style: none;
+    background: #d9e1e8;
+    color: rgb(80,80,80);
+    border:2px dashed #269;
+    padding: 10px;
 }
 
 section{
     margin-top: 20px;
     clear: both;
     overflow-y: hidden;
+    text-align: center;
+}
+
+p{
+    text-align: left;
+}
+
+ul{
+    text-align: left;
 }
 
 .firstName-header{
@@ -93,6 +106,21 @@ section{
 .lastName-cell{
     color: red;
 }
+
+em{
+    color:#269;
+    background: #c1c2c2;
+}
+
+.note{
+    display: inline-block;
+    padding: 10px;
+    border-radius: 4px;
+    background: #269;
+    font-size: 0.9em;
+    color: white;
+}
+
 
 
 
