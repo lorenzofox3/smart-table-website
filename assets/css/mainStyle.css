@@ -44,7 +44,11 @@ pre {
 .menu{
     width: 100%;
     text-align: left;
-    margin-top: 5px;
+    margin:5px 0 0 0;
+    height: 35px;
+    border-top: 2px solid rgb(214, 213, 220);
+    border-bottom: 2px solid rgb(214, 213, 220);
+    background: #000000;
 }
 
 .menu > li{
