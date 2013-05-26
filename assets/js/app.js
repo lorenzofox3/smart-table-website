@@ -28,4 +28,17 @@ app.directive('custom', ['$log',function (log) {
             });
         }
     }
-}]);
+}])
+    .directive('columnFilter', function () {
+       return {
+           restrict:'C',
+           scope:{},
+           require:'^smartTable',
+           link: function (scope, element, attrs, ctrl) {
+               scope.searchValue='';
+               scope.$watch('searchValue', function (value) {
+                   ctrl.search(value,scope.$parent.column);
+               })
+           }
+       }
+    });

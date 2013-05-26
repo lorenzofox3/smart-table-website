@@ -53,14 +53,6 @@ app.controller('sortCtrl', ['$scope', '$filter', function (scope, filter) {
         {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
         {label: 'e-mail', map: 'email', isSortable: false}
     ];
-
-//    scope.globalConfig = {
-//        sortAlgorithm: function (arrayRef, sortPredicate, reverse) {
-//            //it will sort all the column by length of
-//            return filter('orderBy')(arrayRef,null,reverse);
-//        }
-//    };
-
 }]);
 app.controller('filterCtrl', ['$scope', function (scope) {
     scope.rowCollection = [
@@ -70,11 +62,8 @@ app.controller('filterCtrl', ['$scope', function (scope) {
     ];
 
     scope.columnCollection = [
-        {label: 'First Name', map: 'firstName', sortPredicate: function (dataRow) {
-            //predicate as a function (see angular orderby documentation) : it will sort by the string length
-            return dataRow.firstName.length;
-        } },
-        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase',headerTemplateUrl:'assets/template/customHeader.html'},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
         {label: 'e-mail', map: 'email', isSortable: false}
@@ -149,6 +138,6 @@ app.controller('cellTemplateCtrl', ['$scope', function (scope) {
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
         {label: 'e-mail', map: 'email'},
-        {label: 'Favourite color',templateUrl:'assets/template/custom.html'}
+        {label: 'Favourite color',cellTemplateUrl:'assets/template/custom.html'}
     ];
 }]);

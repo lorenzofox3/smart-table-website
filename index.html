@@ -7,7 +7,7 @@
     <script src="./assets/js/ui-bootstrap-custom-tpls-0.4.0-SNAPSHOT.js"></script>
     <script src="./assets/js/app.js"></script>
     <script src="./assets/js/controllers.js"></script>
-    <script src="./assets/js/Smart-Table.js"></script>
+    <script src="./assets/js/Smart-Table.debug.js"></script>
     <link rel="stylesheet" href="assets/css/mainStyle.css"/>
     <link rel="stylesheet" href="assets/css/bootstrap.css"/>
     <link rel="stylesheet" href="assets/css/prism.css"/>
@@ -195,7 +195,7 @@
             <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
         </div>
         <h4>Use your own algorithm</h4>
-        <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes
+        <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes.
         You can bind the table-configuration attribute to an object that will represent the table "global" configuration. One of the global property is the
         sort algorithm (<em>sortAlgorithm</em>).
         </p>
@@ -221,10 +221,11 @@
 
     scope.columnCollection = [
         {label: 'First Name', map: 'firstName'},
-        {label: 'Last Name', map: 'lastName',formatFunction:'uppercase'},
-        {label: 'Birth Date', map: 'birthDate', formatFunction:'date'},
-        {label: 'Balance', map: 'balance', formatFunction:'currency',formatParameter:'$'},
-        {label: 'e-mail', map: 'email'}
+        //the headerTemplateUrl property will be explained later, the purpose here is to show we can filter also by column only
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase',headerTemplateUrl:'assets/template/customHeader.html'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email', isSortable: false}
     ];
     scope.globalConfig={
         isGlobalSearchActivated:true
@@ -302,7 +303,7 @@
             <li ng-repeat="row in rowCollection">{{ row | json}}</li>
         </ul>
     </section>
-        <section id="section-edit" ng-controller="editCtrl">
+    <section id="section-edit" ng-controller="editCtrl">
             <h2>Edit cell</h2>
             <p>You can make the cells of a given column editable by simply setting the <em>isEditable</em> property to true in this column config. This will allow
             you to edit directly the property on the data model object. Therefore, you may want to specify which type of input the cell will accept. You just
@@ -341,9 +342,9 @@
                 <li ng-repeat="row in rowCollection">{{ row | json}}</li>
             </ul>
         </section>
-        <section id="section-style" ng-controller="styleCtrl">
+    <section id="section-style" ng-controller="styleCtrl">
             <h2>Simple styling</h2>
-            <p>This is simply allow you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
+            <p>This allows you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
             <em>headerClass</em> and <em>cellClass</em> property in the column configuration</p>
             <tabs>
                 <pane heading="javascript">
@@ -384,7 +385,7 @@
         </section>
     <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
         <h2>Cell Template</h2>
-        <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>templateUrl</em> property in the column config
+        <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
         this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
         </p>
@@ -409,7 +410,7 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
         {label: 'e-mail', map: 'email'},
-        {label: 'Favourite color',templateUrl:'assets/template/custom.html'}
+        {label: 'Favourite color',cellTemplateUrl:'assets/template/custom.html'}
     ];
 }]);</code></pre>
             </pane>
