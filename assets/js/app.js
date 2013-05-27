@@ -32,7 +32,6 @@ app.directive('custom', ['$log',function (log) {
     .directive('columnFilter', function () {
        return {
            restrict:'C',
-           scope:{column:'='},
            require:'^smartTable',
            link: function (scope, element, attrs, ctrl) {
                scope.searchValue='';
