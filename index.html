@@ -494,7 +494,6 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
                 <pre class="language-javascript"><code>app.directive('columnFilter', function () {
     return {
         restrict:'C',
-        scope:{column:'='},
         require:'^smartTable',
         link: function (scope, element, attrs, ctrl) {
             scope.searchValue='';
