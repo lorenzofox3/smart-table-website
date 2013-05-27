@@ -32,12 +32,12 @@ app.directive('custom', ['$log',function (log) {
     .directive('columnFilter', function () {
        return {
            restrict:'C',
-           scope:{},
+           scope:{column:'='},
            require:'^smartTable',
            link: function (scope, element, attrs, ctrl) {
                scope.searchValue='';
                scope.$watch('searchValue', function (value) {
-                   ctrl.search(value,scope.$parent.column);
+                   ctrl.search(value,scope.column);
                })
            }
        }

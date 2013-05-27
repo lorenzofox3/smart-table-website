@@ -36,87 +36,87 @@ pre {
     box-shadow: inset 0px 0px 5px 1px rgba(0, 0, 0, 1);
 }
 
-.table-container{
+.table-container {
     width: 75%;
     margin: 20px auto;
 }
 
-.menu{
+.menu {
     width: 100%;
     text-align: left;
-    margin:5px 0 0 0;
+    margin: 5px 0 0 0;
     height: 35px;
     border-top: 2px solid rgb(214, 213, 220);
     border-bottom: 2px solid rgb(214, 213, 220);
     background: #000000;
 }
 
-.menu > li{
+.menu > li {
     list-style: none;
     display: inline;
     float: left;
 }
 
 .menu > li > a {
-    width: 100px;
+    width: 90px;
     line-height: 1.8em;
-    color: rgb(80,80,80);
+    color: rgb(80, 80, 80);
 }
 
-.selected{
+.selected {
     background-color: rgb(255, 238, 126);
 }
 
-.side-controls{
+.side-controls {
     margin-left: 15px;
     float: left;
     width: 20%;
     background: #d9e1e8;
-    color: rgb(80,80,80);
+    color: rgb(80, 80, 80);
     padding: 5px;
-    border:2px dashed #269;
+    border: 2px dashed #269;
 }
 
-.output-list{
+.output-list {
     display: inline-block;
     width: 70%;
     margin-left: 25px;
     list-style: none;
     background: #d9e1e8;
-    color: rgb(80,80,80);
-    border:2px dashed #269;
+    color: rgb(80, 80, 80);
+    border: 2px dashed #269;
     padding: 10px;
 }
 
-section{
+section {
     margin-top: 20px;
     clear: both;
     overflow-y: hidden;
     text-align: center;
 }
 
-p{
+p {
     text-align: left;
 }
 
-ul{
+ul {
     text-align: left;
 }
 
-.firstName-header{
+.firstName-header {
     text-decoration: underline;
 }
 
-.lastName-cell{
+.lastName-cell {
     color: red;
 }
 
-em{
-    color:#269;
+em {
+    color: #269;
     background: #c1c2c2;
 }
 
-.note{
+.note {
     display: inline-block;
     padding: 10px;
     border-radius: 4px;
@@ -124,8 +124,37 @@ em{
     font-size: 0.9em;
     color: white;
 }
-.pagination{
+
+.pagination {
     text-align: center;
+    margin: 0;
+}
+
+th:not(.selection-header) {
+    min-width: 100px;
+}
+
+h2 {
+    border-bottom: 2px solid #269;
+    border-top: 2px solid #269;
+}
+
+.header-content:before {
+    content: ' ';
+    position: relative;
+    left: -5px;
+}
+
+.sort-ascent:before {
+    content: "\25B4";
+}
+
+.sort-descent:before {
+    content: "\25BE";
+}
+
+.property-name{
+    font-weight: bold;
 }
 
 

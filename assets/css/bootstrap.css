@@ -4584,10 +4584,6 @@ input[type="submit"].btn.btn-mini {
     color: #999999;
 }
 
-.pagination {
-    margin: 20px 0;
-}
-
 .pagination ul {
     display: inline-block;
     *display: inline;
