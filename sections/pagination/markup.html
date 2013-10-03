@@ -1,0 +1,64 @@
+<section id="section-pagination" ng-controller="paginationCtrl">
+    <h2>Client side Pagination</h2>
+    <p>If you don't want to display too much data at the time you'll be happy using the pagination feature. It uses the <a href="https://github.com/angular-ui/bootstrap/tree/master/src/pagination">angular.ui-boostrap pagination directive</a> and you'll be able
+        to configure it through some global config properties. First of all, the property <em>isPaginationEnabled</em> must be set to true. Then you can decide the
+        number of pages you want to display with the <em>maxSize</em> property and the number of items you want to display on a page thanks to the <em>itemsByPage</em> property</p>
+    <p class="note"><i class="icon-white icon-tags"></i>You may wonder why it has been decided to implement a client side pagination and not a server side pagination. Well in my opinion it does not
+        make sens to have the pagination on server side when you have the sort/filter on the client side. If you sort the data on the client side, but some are not loaded yet do you think the displayed
+        data are really relevant. I don't.</p>
+
+    <tabs>
+        <pane heading="JavaScript">
+<pre class="language-javascript"><code>app.controller('paginationCtrl', ['$scope', function (scope) {
+    var
+            nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+            familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+
+    function createRandomItem() {
+        var
+                firstName = nameList[Math.floor(Math.random() * 4)],
+                lastName = familyName[Math.floor(Math.random() * 4)],
+                age = Math.floor(Math.random() * 100),
+                email = firstName + lastName + '@whatever.com',
+                balance = Math.random() * 3000;
+
+        return{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            balance: balance
+        };
+    }
+
+    scope.rowCollection = [];
+    for (var j = 0; j < 200; j++) {
+        scope.rowCollection.push(createRandomItem());
+    }
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName'},
+        {label: 'Age', map: 'age'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+
+    scope.globalConfig = {
+        isPaginationEnabled: true,
+        itemsByPage: 12,
+        maxSize: 8
+    };
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre class="language-markup" ng-non-bindable><code>&lt;div ng-controller="paginationCtrl">
+    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+
+    <div class="table-container">
+        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+</section>

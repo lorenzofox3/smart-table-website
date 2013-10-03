@@ -1,0 +1,51 @@
+<section id="section-format" ng-controller="formatCtrl">
+    <h2>Format data</h2>
+    <p>
+        In our previous examples the data were display as raw strings,but what if we want to format date, currency and so on in a propert way ?
+        In the column configuration, you can specify how to format the data for the given column by adding <em>formatFunction</em> and <em>formatParameter</em>
+        properties.
+    </p>
+    <ul>
+        <li>The <em>formatFunction</em> can be a function either a string
+            <ul>
+                <li>If it is a string, it is expected to be one of the angular filters name. The displayed data will be as if you have used the angular filter.</li>
+                <li>If you use a function, it must take the value to format as first parameter, then an optional <em>formatParameter</em>
+<pre><code class="language-javascript">function (value, formatParameter) {
+    //do some stuff
+    return formatedValue;
+}</code></pre>
+                </li>
+            </ul>
+        </li>
+        <li>The formatParameter is an optional parameter to pass to the format function. If you use one of the built in angular filter it will be for example the symbol you pass to the currency filter.</li>
+    </ul>
+    <tabs>
+        <pane heading="JavaScript">
+<pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', formatFunction: function (value, formatParameter) {
+            //this only display the first letter
+            return value[0];
+        }},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'}
+    ];
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="formatCtrl">
+    &lt;smart-table columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+    <div class="table-container">
+        <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+</section>

@@ -1,0 +1,51 @@
+<section id="section-sort" ng-controller="sortCtrl">
+    <h2>Sort data</h2>
+    <p>You may also want to sort the data rows. By default the table sort the data rows following the <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy</a> angular algorithm but you can also use your own
+        algorithm (see below). When you click on one of the column header the orderBy algorithm will sort the data rows according to these rules
+    </p>
+    <ul>
+        <li>if you have set the <em>sortPredicate</em> property on the column config : it will use it as predicate for the orderBy algorithm (see <a href="http://docs.angularjs.org/api/ng.filter:orderBy">angular documentation</a>)</li>
+        <li>otherwise it will use the property name the column is mapped to as predicate for the orderBy algorithm (it simply means it will sort the data rows according to the clicked column values) </li>
+    </ul>
+
+    <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> porperty to false (it is true by default)</p>
+    <tabs>
+        <pane heading="JavaScript">
+<pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', sortPredicate: function (dataRow) {
+//predicate as a function (see angular orderby documentation) : it will sort by the string length
+            return dataRow.firstName.length;
+        } },
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email', isSortable: false}
+    ];
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="sortCtrl">
+    &lt;smart-table columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+    <div class="table-container">
+        <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+    <h4>Use your own algorithm</h4>
+    <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes.
+        You can bind the table-configuration attribute to an object that will represent the table "global" configuration. One of the global property is the
+        sort algorithm (<em>sortAlgorithm</em>).
+    </p>
+<pre><code class="language-javascript">function customSortAlgorithm(arrayRef, sortPredicate, reverse) {
+//do some stuff
+    return sortedArray;
+}</code></pre>
+</section>

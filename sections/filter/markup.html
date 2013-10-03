@@ -1,0 +1,45 @@
+<section id="section-filter" ng-controller="filterCtrl">
+    <h2>Search/filter data</h2>
+    <p>The <a href="#">table controller API</a> gives you a way to filter the data comparing an input to both a given column values or in the whole table.
+        To display an input textbox for a global search (in the whole table) you just have to set the <em>isGlobalSearchActivated</em> property to true in the table global config object. The algorithm used
+        will be the one used bye the <a href="http://docs.angularjs.org/api/ng.filter:filter">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
+    </p>
+    <tabs>
+        <pane heading="JavaScript">
+<pre><code class="language-javascript">app.controller('filterCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        //the headerTemplateUrl property will be explained later, the purpose here is to show we can filter also by column only
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', headerTemplateUrl: 'assets/template/customHeader.html'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email', isSortable: false}
+    ];
+    scope.globalConfig = {
+        isGlobalSearchActivated: true
+    };
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="filterCtrl">
+    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+    <div class="table-container">
+        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+    <h4>Use your own algorithm</h4>
+    <p>In the same way than for the sort operation you can use you own algorithm, you just have to specify the function you want to use in the global config
+        under the property <em>filterAlgorithm</em></p>
+<pre><code class="language-javascript">function customFilter(arrayRef, expression) {
+    //do some stuff
+    return filteredArray;
+}</code></pre>
+</section>

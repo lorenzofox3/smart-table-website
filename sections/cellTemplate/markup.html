@@ -1,0 +1,122 @@
+<section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
+    <h2>Cell Template</h2>
+    <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
+        this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
+        directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
+    </p>
+        <pre ><code class="language-javascript">scope.column;//the column ojbect
+scope.dataRow;//the data row object
+scope.formatedValue;//the formated value (not the raw string)</code></pre>
+    <p class="note"><i class="icon-white icon-tags"></i>You can use the table controller api in your directive</p>
+    <p class="note"><i class="icon-white icon-tags"></i>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
+        in your template/directive</P>
+    <tabs>
+        <pane heading="javascript">
+                <pre class="language-javascript"><code
+                        class="language-javascript">app.controller('cellTemplateCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency'},
+        {label: 'e-mail', map: 'email'},
+        {label: 'Favourite color', cellTemplateUrl: 'assets/template/custom.html'}
+    ];
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+                <pre ng-non-bindable data-line="1"><code class="language-markup">&lt;div>
+    &lt;smart-table columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+        <pane heading="custom.html">
+            <pre ng-non-bindable><code class="language-markup">&lt;custom>&lt;/cutsom></code></pre>
+        </pane>
+        <pane heading="custom.js">
+                <pre><code class="language-javascript">app.directive('custom', function () {
+    return {
+        restrict: 'E',
+        //include smart table controller to use its API if needed
+        require: '^smartTable',
+        template: '&lt;select ng-model="favouriteColor">' +
+                '&lt;option value="">--choose favorite color--&lt;/option>' +
+                '&lt;option value="red">red&lt;/option>' +
+                '&lt;option value="blue">blue&lt;/option>' +
+                '&lt;option value="yellow">yellow&lt;/option>' +
+                '&lt;/select>',
+        replace: true,
+        link: function (scope, element, attrs, ctrl) {
+            //can use scope.dataRow, scope.column, scope.formatedValue, and ctrl API
+
+            var allowedColors = ['red', 'yellow', 'blue'];
+
+            scope.$watch('favouriteColor', function (value) {
+                if (allowedColors.indexOf(value) != -1) {
+                    scope.dataRow.favouriteColor = scope.favouriteColor;
+                }
+            });
+        }
+    };
+});</code></pre>
+        </pane>
+    </tabs>
+    <div class="table-container">
+        <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+    <ul class="output-list">
+        <li ng-repeat="row in rowCollection">{{ row | json}}</li>
+    </ul>
+    <p>In the same way you can assign a custom template to the column header thanks to the column property <em>headerTemplateUrl</em>. See the source code
+        of the previous filter section as an example.</p>
+    <tabs>
+        <pane heading="JavaScript">
+                <pre class="language-javascript"><code>app.controller('filterCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', headerTemplateUrl: 'assets/template/customHeader.html'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+    scope.globalConfig = {
+        isGlobalSearchActivated: true
+    };
+}]);</code></pre>
+        </pane>
+        <pane heading="markup" >
+<pre ng-non-bindable class="language-markup"><code>&lt;div ng-controller="filterCtrl">
+    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+        <pane heading="customHeader.html" >
+                <pre ng-non-bindable class="language-markup"><code>&lt;span>{{column.label}}&lt;/span>
+&lt;input class="column-filter" type="text" ng-model="searchValue" /></code></pre>
+        </pane>
+        <pane heading="customHeader.js" >
+<pre class="language-javascript"><code>app.directive('columnFilter', function () {
+    return {
+        restrict: 'C',
+        require: '^smartTable',
+        link: function (scope, element, attrs, ctrl) {
+            scope.searchValue = '';
+            scope.$watch('searchValue', function (value) {
+                ctrl.search(value, scope.column);
+            })
+        }
+    }
+});</code></pre>
+        </pane>
+    </tabs>
+</section>

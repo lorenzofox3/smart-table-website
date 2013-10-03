@@ -1,0 +1,55 @@
+<section id="section-selection" ng-controller="selectionCtrl">
+    <h2>Select data rows</h2>
+    <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
+        property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
+        a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
+        on the other hand it allows the parent scope to quickly have a list of the selected items without relying on events. If you are in selectionMode="multiple" you can add a selection checkbox
+        column by setting the global property <em>displaySelectionCheckbox</em> to true</p>
+    <p class="note"><i class="icon-white icon-tags"></i> Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
+        to 'none' with a selected item, the item will remain selected. It is the responsability of the parent scope/controller to reset the selected item</p>
+
+    <tabs>
+        <pane heading="javascript">
+<pre><code class="language-javascript">app.controller('selectionCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+    scope.globalConfig = {
+        selectionMode: 'multiple',
+        displaySelectionCheckbox: true
+    };
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre><code class="language-markup">&lt;div ng-controller="selectionCtrl">
+    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+    <div class="table-container">
+        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+    <div class="side-controls">
+        <label ng-show="canDisplayCheckbox()" for="selection-checkbox">display checkbox:</label>
+        <input ng-show="canDisplayCheckbox()" id="selection-checkbox" type="checkbox" ng-model="globalConfig.displaySelectionCheckbox"/>
+        <label>selection mode:</label>
+        <select ng-model="globalConfig.selectionMode">
+            <option value="none">none</option>
+            <option value="single">single</option>
+            <option value="multiple">multiple</option>
+        </select>
+    </div>
+    <ul class="output-list">
+        <li ng-repeat="row in rowCollection">{{ row | json}}</li>
+    </ul>
+</section>

@@ -1,3 +1,789 @@
+/*table module */
+
+//TODO be able to register function on remove/add column and rows or use the scope to emit the events
+
+angular.module('SmartTable.Table', ['SmartTable.Column', 'SmartTable.Utilities', 'SmartTable.directives', 'SmartTable.filters', 'ui.bootstrap.pagination'])
+    .constant('DefaultTableConfiguration', {
+        selectionMode: 'none',
+        isGlobalSearchActivated: false,
+        displaySelectionCheckbox: false,
+        isPaginationEnabled: false,
+        itemsByPage: 10,
+        maxSize: 5,
+
+        //just to remind available option
+        sortAlgorithm: '',
+        filterAlgorithm: ''
+    })
+    .controller('TableCtrl', ['$scope', 'Column', '$filter', 'ArrayUtility', 'DefaultTableConfiguration', function (scope, Column, filter, arrayUtility, defaultConfig) {
+
+        scope.columns = [];
+        scope.dataCollection = scope.dataCollection || [];
+        scope.displayedCollection = []; //init empty array so that if pagination is enabled, it does not spoil performances
+        scope.numberOfPages = calculateNumberOfPages(scope.dataCollection);
+        scope.currentPage = 1;
+
+        var predicate = {},
+            lastColumnSort;
+
+        function calculateNumberOfPages(array) {
+
+            if (!angular.isArray(array)) {
+                return 1;
+            }
+            if (array.length === 0 || scope.itemsByPage < 1) {
+                return 1;
+            }
+            return Math.ceil(array.length / scope.itemsByPage);
+        }
+
+        function sortDataRow(array, column) {
+            var sortAlgo = (scope.sortAlgorithm && angular.isFunction(scope.sortAlgorithm)) === true ? scope.sortAlgorithm : filter('orderBy');
+            if (column) {
+                return arrayUtility.sort(array, sortAlgo, column.sortPredicate, column.reverse);
+            } else {
+                return array;
+            }
+        }
+
+        //TODO check if it would be better not to 'pollute' the dataModel itself and use a wrapper/decorator for all the stuff related to the table features like we do for column (then we could emit event)
+        function selectDataRow(array, selectionMode, index, select) {
+
+            var dataRow;
+
+            if ((!angular.isArray(array)) || (selectionMode !== 'multiple' && selectionMode !== 'single')) {
+                return;
+            }
+
+            if (index >= 0 && index < array.length) {
+                dataRow = array[index];
+                if (selectionMode === 'single') {
+                    //unselect all the others
+                    for (var i = 0, l = array.length; i < l; i++) {
+                        array[i].isSelected = false;
+                    }
+                    dataRow.isSelected = select;
+                } else if (selectionMode === 'multiple') {
+                    dataRow.isSelected = select;
+                }
+            }
+        }
+
+        /**
+         * set the config (config parameters will be available through scope
+         * @param config
+         */
+        this.setGlobalConfig = function (config) {
+            angular.extend(scope, defaultConfig, config);
+        };
+
+        /**
+         * change the current page displayed
+         * @param page
+         */
+        this.changePage = function (page) {
+            if (angular.isNumber(page.page)) {
+                scope.currentPage = page.page;
+                scope.displayedCollection = this.pipe(scope.dataCollection);
+            }
+        };
+
+        /**
+         * set column as the column used to sort the data (if it is already the case, it will change the reverse value)
+         * @method sortBy
+         * @param column
+         */
+        this.sortBy = function (column) {
+            var index = scope.columns.indexOf(column);
+            if (index !== -1) {
+                if (column.isSortable === true) {
+                    // reset the last column used
+                    if (lastColumnSort && lastColumnSort !== column) {
+                        lastColumnSort.reverse = 'none';
+                    }
+
+                    column.sortPredicate = column.sortPredicate || column.map;
+                    column.reverse = column.reverse !== true;
+                    lastColumnSort = column;
+                }
+            }
+
+            scope.displayedCollection = this.pipe(scope.dataCollection);
+        };
+
+        /**
+         * set the filter predicate used for searching
+         * @param input
+         * @param column
+         */
+        this.search = function (input, column) {
+
+            //update column and global predicate
+            if (column && scope.columns.indexOf(column) !== -1) {
+                predicate.$ = '';
+                column.filterPredicate = input;
+            } else {
+                for (var j = 0, l = scope.columns.length; j < l; j++) {
+                    scope.columns[j].filterPredicate = '';
+                }
+                predicate.$ = input;
+            }
+
+            for (var j = 0, l = scope.columns.length; j < l; j++) {
+                predicate[scope.columns[j].map] = scope.columns[j].filterPredicate;
+            }
+            scope.displayedCollection = this.pipe(scope.dataCollection);
+
+        };
+
+        /**
+         * combine sort, search and limitTo operations on an array,
+         * @param array
+         * @returns Array, an array result of the operations on input array
+         */
+        this.pipe = function (array) {
+            var filterAlgo = (scope.filterAlgorithm && angular.isFunction(scope.filterAlgorithm)) === true ? scope.filterAlgorithm : filter('filter'),
+                output;
+            //filter and sort are commutative
+            output = sortDataRow(arrayUtility.filter(array, filterAlgo, predicate), lastColumnSort);
+            scope.numberOfPages = calculateNumberOfPages(output);
+            return scope.isPaginationEnabled ? arrayUtility.fromTo(output, (scope.currentPage - 1) * scope.itemsByPage, scope.itemsByPage) : output;
+        }
+
+        /*////////////
+         Column API
+         ///////////*/
+
+
+        /**
+         * insert a new column in scope.collection at index or push at the end if no index
+         * @param columnConfig column configuration used to instantiate the new Column
+         * @param index where to insert the column (at the end if not specified)
+         */
+        this.insertColumn = function (columnConfig, index) {
+            var column = new Column(columnConfig);
+            arrayUtility.insertAt(scope.columns, index, column);
+        };
+
+        /**
+         * remove the column at columnIndex from scope.columns
+         * @param columnIndex index of the column to be removed
+         */
+        this.removeColumn = function (columnIndex) {
+            arrayUtility.removeAt(scope.columns, columnIndex);
+        };
+
+        /**
+         * move column located at oldIndex to the newIndex in scope.columns
+         * @param oldIndex index of the column before it is moved
+         * @param newIndex index of the column after the column is moved
+         */
+        this.moveColumn = function (oldIndex, newIndex) {
+            arrayUtility.moveAt(scope.columns, oldIndex, newIndex);
+        };
+
+
+        /*///////////
+         ROW API
+         */
+
+        /**
+         * select or unselect the item of the displayedCollection with the selection mode set in the scope
+         * @param dataRow
+         */
+        this.toggleSelection = function (dataRow) {
+            var index = scope.displayedCollection.indexOf(dataRow);
+            if (index !== -1) {
+                selectDataRow(scope.displayedCollection, scope.selectionMode, index, dataRow.isSelected !== true);
+            }
+        };
+
+        /**
+         * select/unselect all the currently displayed rows
+         * @param value if true select, else unselect
+         */
+        this.toggleSelectionAll = function (value) {
+            var i = 0,
+                l = scope.displayedCollection.length;
+
+            if (scope.selectionMode !== 'multiple') {
+                return;
+            }
+            for (; i < l; i++) {
+                selectDataRow(scope.displayedCollection, scope.selectionMode, i, value === true);
+            }
+        };
+
+        /**
+         * remove the item at index rowIndex from the displayed collection
+         * @param rowIndex
+         * @returns {*} item just removed or undefined
+         */
+        this.removeDataRow = function (rowIndex) {
+            var toRemove = arrayUtility.removeAt(scope.displayedCollection, rowIndex);
+            arrayUtility.removeAt(scope.dataCollection, scope.dataCollection.indexOf(toRemove));
+        };
+
+        /**
+         * move an item from oldIndex to newIndex in displayedCollection
+         * @param oldIndex
+         * @param newIndex
+         */
+        this.moveDataRow = function (oldIndex, newIndex) {
+            arrayUtility.moveAt(scope.displayedCollection, oldIndex, newIndex);
+        };
+    }]);
+
+
+/* Column module */
+
+var smartTableColumnModule = angular.module('SmartTable.Column', []).constant('DefaultColumnConfiguration', {
+    isSortable: true,
+    isEditable: false,
+    type: 'text',
+    headerTemplateUrl: 'assets/template/defaultHeader.html',
+
+    //it is useless to have that empty strings, but it reminds what is available
+    map: '',
+    label: '',
+    sortPredicate: '',
+    formatFunction: '',
+    filterPredicate:'',
+    formatParameter: '',
+    cellTemplateUrl: '',
+    headerClass: '',
+    cellClass: ''
+});
+
+
+function ColumnProvider(DefaultColumnConfiguration) {
+
+    function Column(config) {
+        if (!(this instanceof Column)) {
+            return new Column(config);
+        }
+        angular.extend(this, config);
+    }
+
+    this.setDefaultOption = function (option) {
+        angular.extend(Column.prototype, option);
+    };
+
+    this.setDefaultOption(DefaultColumnConfiguration);
+
+    this.$get = function () {
+        return Column;
+    };
+}
+
+ColumnProvider.$inject = ['DefaultColumnConfiguration'];
+smartTableColumnModule.provider('Column', ColumnProvider);
+
+
+angular.module('SmartTable.Utilities', [])
+
+    .factory('ArrayUtility', function () {
+
+        /**
+         * remove the item at index from arrayRef and return the removed item
+         * @param arrayRef
+         * @param index
+         * @returns {*}
+         */
+        var removeAt = function (arrayRef, index) {
+                if (index >= 0 && index < arrayRef.length) {
+                    return arrayRef.splice(index, 1)[0];
+                }
+            },
+
+            /**
+             * insert item in arrayRef at index or a the end if index is wrong
+             * @param arrayRef
+             * @param index
+             * @param item
+             */
+                insertAt = function (arrayRef, index, item) {
+                if (index >= 0 && index < arrayRef.length) {
+                    arrayRef.splice(index, 0, item);
+                } else {
+                    arrayRef.push(item);
+                }
+            },
+
+            /**
+             * move the item at oldIndex to newIndex in arrayRef
+             * @param arrayRef
+             * @param oldIndex
+             * @param newIndex
+             */
+                moveAt = function (arrayRef, oldIndex, newIndex) {
+                var elementToMove;
+                if (oldIndex >= 0 && oldIndex < arrayRef.length && newIndex >= 0 && newIndex < arrayRef.length) {
+                    elementToMove = arrayRef.splice(oldIndex, 1)[0];
+                    arrayRef.splice(newIndex, 0, elementToMove);
+                }
+            },
+
+            /**
+             * sort arrayRef according to sortAlgorithm following predicate and reverse
+             * @param arrayRef
+             * @param sortAlgorithm
+             * @param predicate
+             * @param reverse
+             * @returns {*}
+             */
+                sort = function (arrayRef, sortAlgorithm, predicate, reverse) {
+
+                if (!sortAlgorithm || !angular.isFunction(sortAlgorithm)) {
+                    return arrayRef;
+                } else {
+                    return sortAlgorithm(arrayRef, predicate, reverse === true);//excpet if reverse is true it will take it as false
+                }
+            },
+
+            /**
+             * filter arrayRef according with filterAlgorithm and predicate
+             * @param arrayRef
+             * @param filterAlgorithm
+             * @param predicate
+             * @returns {*}
+             */
+                filter = function (arrayRef, filterAlgorithm, predicate) {
+                if (!filterAlgorithm || !angular.isFunction(filterAlgorithm)) {
+                    return arrayRef;
+                } else {
+                    return filterAlgorithm(arrayRef, predicate);
+                }
+            },
+
+            /**
+             * return an array, part of array ref starting at min and the size of length
+             * @param arrayRef
+             * @param min
+             * @param length
+             * @returns {*}
+             */
+                fromTo = function (arrayRef, min, length) {
+
+                var out = [],
+                    limit,
+                    start;
+
+                if (!angular.isArray(arrayRef)) {
+                    return arrayRef;
+                }
+
+                start = Math.max(min, 0);
+                start = Math.min(start, (arrayRef.length - 1) > 0 ? arrayRef.length - 1 : 0);
+
+                length = Math.max(0, length);
+                limit = Math.min(start + length, arrayRef.length);
+
+                for (var i = start; i < limit; i++) {
+                    out.push(arrayRef[i]);
+                }
+                return out;
+            };
+
+
+        return {
+            removeAt: removeAt,
+            insertAt: insertAt,
+            moveAt: moveAt,
+            sort: sort,
+            filter: filter,
+            fromTo: fromTo
+        };
+    });
+
+
+/* Filters */
+
+angular.module('SmartTable.filters', []).
+    constant('DefaultFilters', ['currency', 'date', 'json', 'lowercase', 'number', 'uppercase']).
+    filter('format', ['$filter', 'DefaultFilters', function (filter, defaultfilters) {
+        return function (value, formatFunction, filterParameter) {
+
+            var returnFunction;
+
+            if (formatFunction && angular.isFunction(formatFunction)) {
+                returnFunction = formatFunction;
+            } else {
+                returnFunction = defaultfilters.indexOf(formatFunction) !== -1 ? filter(formatFunction) : function (value) {
+                    return value;
+                };
+            }
+            return returnFunction(value, filterParameter);
+        };
+    }]);
+
+/* Directives */
+angular.module('SmartTable.directives', [])
+    .constant('templateUrlList', {
+        smartTable: 'assets/template/smartTable.html',
+        smartTableGlobalSearch: 'assets/template/globalSearchCell.html',
+        editableCell: 'assets/template/editableCell.html',
+        selectionCheckbox: 'assets/template/selectionCheckbox.html',
+        selectAllCheckbox: 'assets/template/selectAllCheckbox.html',
+        defaultHeader: 'assets/template/defaultHeader.html'
+    })
+    .directive('smartTable', ['templateUrlList', 'DefaultTableConfiguration', function (templateList, defaultConfig) {
+        return {
+            restrict: 'E',
+            scope: {
+                columnCollection: '=columns',
+                dataCollection: '=rows',
+                config: '='
+            },
+            replace: 'true',
+            templateUrl: templateList.smartTable,
+            controller: 'TableCtrl',
+            link: function (scope, element, attr, ctrl) {
+
+                var templateObject;
+
+                scope.$watch('config', function (config) {
+                    var newConfig = angular.extend({}, defaultConfig, config),
+                        length = scope.columns !== undefined ? scope.columns.length : 0;
+
+                    ctrl.setGlobalConfig(newConfig);
+
+                    //remove the checkbox column if needed
+                    if (newConfig.selectionMode !== 'multiple' || newConfig.displaySelectionCheckbox !== true) {
+                        for (var i = length - 1; i >= 0; i--) {
+                            if (scope.columns[i].isSelectionColumn === true) {
+                                ctrl.removeColumn(i);
+                            }
+                        }
+                    } else {
+                        //add selection box column if required
+                        ctrl.insertColumn({cellTemplateUrl: templateList.selectionCheckbox, headerTemplateUrl: templateList.selectAllCheckbox, headerClass: 'selection-header', isSelectionColumn: true}, 0);
+                    }
+                }, true);
+
+                //insert columns from column config
+                //TODO add a way to clean all columns
+                scope.$watch('columnCollection', function (oldValue, newValue) {
+                    if (scope.columnCollection) {
+                        for (var i = 0, l = scope.columnCollection.length; i < l; i++) {
+                            ctrl.insertColumn(scope.columnCollection[i]);
+                        }
+                    } else {
+                        //or guess data Structure
+                        if (scope.dataCollection && scope.dataCollection.length > 0) {
+                            templateObject = scope.dataCollection[0];
+                            angular.forEach(templateObject, function (value, key) {
+                                if (key[0] != '$') {
+                                    ctrl.insertColumn({label: key, map: key});
+                                }
+                            });
+                        }
+                    }
+                }, true);
+
+                //if item are added or removed into the data model from outside the grid
+                scope.$watch('dataCollection.length', function (oldValue, newValue) {
+                    if (oldValue !== newValue) {
+                        ctrl.sortBy();//it will trigger the refresh... some hack ?
+                    }
+                });
+
+            }
+        };
+    }])
+    //just to be able to select the row
+    .directive('smartTableDataRow', function () {
+
+        return {
+            require: '^smartTable',
+            restrict: 'C',
+            link: function (scope, element, attr, ctrl) {
+
+                element.bind('click', function () {
+                    scope.$apply(function () {
+                        ctrl.toggleSelection(scope.dataRow);
+                    })
+                });
+            }
+        };
+    })
+    //header cell with sorting functionality or put a checkbox if this column is a selection column
+    .directive('smartTableHeaderCell',function () {
+        return {
+            restrict: 'C',
+            require: '^smartTable',
+            link: function (scope, element, attr, ctrl) {
+                element.bind('click', function () {
+                    scope.$apply(function () {
+                        ctrl.sortBy(scope.column);
+                    });
+                })
+            }
+        };
+    }).directive('smartTableSelectAll', function () {
+        return {
+            restrict: 'C',
+            require: '^smartTable',
+            scope: {},
+            link: function (scope, element, attr, ctrl) {
+                scope.isChecked = false;
+                scope.$watch('isChecked', function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        ctrl.toggleSelectionAll(newValue);
+                    }
+                });
+            }
+        };
+    })
+    //credit to Valentyn shybanov : http://stackoverflow.com/questions/14544741/angularjs-directive-to-stoppropagation
+    .directive('stopEvent', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attr) {
+                element.bind(attr.stopEvent, function (e) {
+                    e.stopPropagation();
+                });
+            }
+        }
+    })
+    //the global filter
+    .directive('smartTableGlobalSearch', ['templateUrlList', function (templateList) {
+        return {
+            restrict: 'C',
+            require: '^smartTable',
+            scope: {
+                columnSpan: '@'
+            },
+            templateUrl: templateList.smartTableGlobalSearch,
+            replace: false,
+            link: function (scope, element, attr, ctrl) {
+
+                scope.searchValue = '';
+
+                scope.$watch('searchValue', function (value) {
+                    //todo perf improvement only filter on blur ?
+                    ctrl.search(value);
+                });
+            }
+        }
+    }])
+    //a customisable cell (see templateUrl) and editable
+    //TODO check with the ng-include strategy
+    .directive('smartTableDataCell', ['$filter', '$http', '$templateCache', '$compile', function (filter, http, templateCache, compile) {
+        return {
+            restrict: 'C',
+            link: function (scope, element) {
+                var
+                    column = scope.column,
+                    row = scope.dataRow,
+                    format = filter('format'),
+                    childScope;
+
+                //can be useful for child directives
+                scope.formatedValue = format(row[column.map], column.formatFunction, column.formatParameter);
+
+                function defaultContent() {
+                    //clear content
+                    if (column.isEditable) {
+                        element.html('<editable-cell row="dataRow" column="column" type="column.type" value="dataRow[column.map]"></editable-cell>');
+                        compile(element.contents())(scope);
+                    } else {
+                        element.text(scope.formatedValue);
+                    }
+                }
+
+                scope.$watch('column.cellTemplateUrl', function (value) {
+
+                    if (value) {
+                        //we have to load the template (and cache it) : a kind of ngInclude
+                        http.get(value, {cache: templateCache}).success(function (response) {
+
+                            //create a scope
+                            childScope = scope.$new();
+                            //compile the element with its new content and new scope
+                            element.html(response);
+                            compile(element.contents())(childScope);
+                        }).error(defaultContent);
+
+                    } else {
+                        defaultContent();
+                    }
+                });
+            }
+        };
+    }])
+    //directive that allows type to be bound in input
+    .directive('inputType', ['$parse', function (parse) {
+        return {
+            restrict: 'A',
+            priority: 1,
+            link: function (scope, ielement, iattr) {
+                //force the type to be set before inputDirective is called
+                var getter = parse(iattr.type),
+                    type = getter(scope);
+                iattr.$set('type', type);
+            }
+        };
+    }])
+    //an editable content in the context of a cell (see row, column)
+    .directive('editableCell', ['templateUrlList', function (templateList) {
+        return {
+            restrict: 'E',
+            require: '^smartTable',
+            templateUrl: templateList.editableCell,
+            scope: {
+                row: '=',
+                column: '=',
+                type: '='
+            },
+            replace: true,
+            link: function (scope, element, attrs, ctrl) {
+                var form = angular.element(element.children()[1]),
+                    input = angular.element(form.children()[0]);
+
+                //init values
+                scope.isEditMode = false;
+
+                scope.submit = function () {
+                    //update model if valid
+                    if (scope.myForm.$valid === true) {
+                        scope.row[scope.column.map] = scope.value;
+                        ctrl.sortBy();//it will trigger the refresh...  (ie it will sort, filter, etc with the new value)
+                    }
+                    scope.isEditMode = false;
+                };
+
+                scope.toggleEditMode = function () {
+                    scope.value = scope.row[scope.column.map];
+                    scope.isEditMode = true;
+                };
+
+                scope.$watch('isEditMode', function (newValue, oldValue) {
+                    if (newValue) {
+                        input[0].select();
+                        input[0].focus();
+                    }
+                });
+
+                input.bind('blur', function () {
+                    scope.$apply(function () {
+                        scope.submit();
+                    });
+                });
+            }
+        };
+    }]);
+
+
+angular.module('ui.bootstrap.pagination', [])
+
+    .constant('paginationConfig', {
+        boundaryLinks: false,
+        directionLinks: true,
+        firstText: 'First',
+        previousText: '<',
+        nextText: '>',
+        lastText: 'Last'
+    })
+
+    .directive('pagination', ['paginationConfig', function (paginationConfig) {
+        return {
+            restrict: 'EA',
+            require: '^smartTable',
+            scope: {
+                numPages: '=',
+                currentPage: '=',
+                maxSize: '='
+            },
+            templateUrl: 'assets/template/pagination.html',
+            replace: true,
+            link: function (scope, element, attrs, ctrl) {
+
+                // Setup configuration parameters
+                var boundaryLinks = angular.isDefined(attrs.boundaryLinks) ? scope.$eval(attrs.boundaryLinks) : paginationConfig.boundaryLinks;
+                var directionLinks = angular.isDefined(attrs.directionLinks) ? scope.$eval(attrs.directionLinks) : paginationConfig.directionLinks;
+                var firstText = angular.isDefined(attrs.firstText) ? attrs.firstText : paginationConfig.firstText;
+                var previousText = angular.isDefined(attrs.previousText) ? attrs.previousText : paginationConfig.previousText;
+                var nextText = angular.isDefined(attrs.nextText) ? attrs.nextText : paginationConfig.nextText;
+                var lastText = angular.isDefined(attrs.lastText) ? attrs.lastText : paginationConfig.lastText;
+
+                // Create page object used in template
+                function makePage(number, text, isActive, isDisabled) {
+                    return {
+                        number: number,
+                        text: text,
+                        active: isActive,
+                        disabled: isDisabled
+                    };
+                }
+
+                scope.$watch('numPages + currentPage + maxSize', function () {
+                    scope.pages = [];
+
+                    // Default page limits
+                    var startPage = 1, endPage = scope.numPages;
+
+                    // recompute if maxSize
+                    if (scope.maxSize && scope.maxSize < scope.numPages) {
+                        startPage = Math.max(scope.currentPage - Math.floor(scope.maxSize / 2), 1);
+                        endPage = startPage + scope.maxSize - 1;
+
+                        // Adjust if limit is exceeded
+                        if (endPage > scope.numPages) {
+                            endPage = scope.numPages;
+                            startPage = endPage - scope.maxSize + 1;
+                        }
+                    }
+
+                    // Add page number links
+                    for (var number = startPage; number <= endPage; number++) {
+                        var page = makePage(number, number, scope.isActive(number), false);
+                        scope.pages.push(page);
+                    }
+
+                    // Add previous & next links
+                    if (directionLinks) {
+                        var previousPage = makePage(scope.currentPage - 1, previousText, false, scope.noPrevious());
+                        scope.pages.unshift(previousPage);
+
+                        var nextPage = makePage(scope.currentPage + 1, nextText, false, scope.noNext());
+                        scope.pages.push(nextPage);
+                    }
+
+                    // Add first & last links
+                    if (boundaryLinks) {
+                        var firstPage = makePage(1, firstText, false, scope.noPrevious());
+                        scope.pages.unshift(firstPage);
+
+                        var lastPage = makePage(scope.numPages, lastText, false, scope.noNext());
+                        scope.pages.push(lastPage);
+                    }
+
+
+                    if (scope.currentPage > scope.numPages) {
+                        scope.selectPage(scope.numPages);
+                    }
+                });
+                scope.noPrevious = function () {
+                    return scope.currentPage === 1;
+                };
+                scope.noNext = function () {
+                    return scope.currentPage === scope.numPages;
+                };
+                scope.isActive = function (page) {
+                    return scope.currentPage === page;
+                };
+
+                scope.selectPage = function (page) {
+                    if (!scope.isActive(page) && page > 0 && page <= scope.numPages) {
+                        scope.currentPage = page;
+                        ctrl.changePage({ page: page });
+                    }
+                };
+            }
+        };
+    }]);
+
 /*
  AngularJS v1.0.6
  (c) 2010-2012 Google, Inc. http://angularjs.org
@@ -160,3 +946,354 @@ c;g?a.$watch(g,function(a,c){e.$set("value",a);a!==c&&k.removeOption(c);k.addOpt
 identity:na,isUndefined:x,isDefined:y,isString:B,isFunction:H,isObject:L,isNumber:Ra,isElement:gc,isArray:E,version:id,isDate:oa,lowercase:A,uppercase:ma,callbacks:{counter:0}});ta=lc(N);try{ta("ngLocale")}catch(c){ta("ngLocale",[]).provider("$locale",Zc)}ta("ng",["ngLocale"],["$provide",function(a){a.provider("$compile",Db).directive({a:jd,input:cc,textarea:cc,form:kd,script:Sd,select:Ud,style:Wd,option:Vd,ngBind:vd,ngBindHtmlUnsafe:xd,ngBindTemplate:wd,ngClass:yd,ngClassEven:Ad,ngClassOdd:zd,ngCsp:Dd,
 ngCloak:Bd,ngController:Cd,ngForm:ld,ngHide:Ld,ngInclude:Fd,ngInit:Gd,ngNonBindable:Hd,ngPluralize:Id,ngRepeat:Jd,ngShow:Kd,ngSubmit:Ed,ngStyle:Md,ngSwitch:Nd,ngSwitchWhen:Od,ngSwitchDefault:Pd,ngOptions:Td,ngView:Rd,ngTransclude:Qd,ngModel:qd,ngList:sd,ngChange:rd,required:dc,ngRequired:dc,ngValue:ud}).directive(mb).directive(ec);a.provider({$anchorScroll:uc,$browser:wc,$cacheFactory:xc,$controller:Bc,$document:Cc,$exceptionHandler:Dc,$filter:Rb,$interpolate:Ec,$http:Vc,$httpBackend:Wc,$location:Ic,
 $log:Jc,$parse:Nc,$route:Qc,$routeParams:Rc,$rootScope:Sc,$q:Oc,$sniffer:Tc,$templateCache:yc,$timeout:$c,$window:Uc})}])})(Za);u(Y).ready(function(){jc(Y,rb)})})(window,document);angular.element(document).find("head").append('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak{display:none;}ng\\:form{display:block;}</style>');
+
+/**
+ * User: laurentrenard
+ * Date: 5/14/13
+ * Time: 10:55 PM
+ **/
+var app=angular.module('app',['ui.bootstrap.tabs','SmartTable.Table']);
+app.directive('custom', ['$log',function (log) {
+    return {
+        restrict:'E',
+        //include smart table controller to use its API if needed
+        require: '^smartTable',
+        template:'<select ng-model="favouriteColor">' +
+            '<option value="">--choose favorite color--</option>'+
+            '<option value="red">red</option>'+
+            '<option value="blue">blue</option>'+
+            '<option value="yellow">yellow</option>'+
+            '</select>',
+        replace:true,
+        link: function (scope, element, attrs, ctrl) {
+
+            var allowedColors=['red','yellow','blue'];
+
+            //can use scope.dataRow, scope.column, scope.formatedValue, and ctrl API
+            scope.$watch('favouriteColor', function (value) {
+                if(allowedColors.indexOf(value)!=-1){
+                    scope.dataRow.favouriteColor=scope.favouriteColor;
+                }
+            });
+        }
+    }
+}])
+    .directive('columnFilter', function () {
+       return {
+           restrict:'C',
+           require:'^smartTable',
+           link: function (scope, element, attrs, ctrl) {
+               scope.searchValue='';
+               scope.$watch('searchValue', function (value) {
+                   ctrl.search(value,scope.column);
+               })
+           }
+       }
+    });
+
+/**
+ * User: laurentrenard
+ * Date: 5/14/13
+ * Time: 10:55 PM
+ **/
+app.controller('mainCtrl', ['$scope', function (scope) {
+    scope.greeting = 'hello Laurent';
+}]);
+app.controller('basicsCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'same same but different', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName'}
+    ];
+}]);
+app.controller('formatCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', formatFunction: function (value, formatParameter) {
+            //this only display the first letter
+            return value[0];
+        }},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'}
+    ];
+}]);
+app.controller('sortCtrl', ['$scope', '$filter', function (scope, filter) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', sortPredicate: function (dataRow) {
+            //predicate as a function (see angular orderby documentation) : it will sort by the string length
+            return dataRow.firstName.length;
+        } },
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email', isSortable: false}
+    ];
+}]);
+app.controller('filterCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', headerTemplateUrl: 'assets/template/customHeader.html'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+    scope.globalConfig = {
+        isGlobalSearchActivated: true
+    };
+}]);
+app.controller('selectionCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+    scope.globalConfig = {
+        selectionMode: 'multiple',
+        displaySelectionCheckbox: true
+    };
+
+    scope.canDisplayCheckbox = function () {
+        return scope.globalConfig.selectionMode === 'multiple';
+    };
+}]);
+app.controller('editCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', isEditable: true},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date', isEditable: true, type: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$', isEditable: true, type: 'number'},
+        {label: 'e-mail', map: 'email', isEditable: true, type: 'email'}
+    ];
+}]);
+app.controller('styleCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName', headerClass: "firstName-header"},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', cellClass: "lastName-cell"},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency'},
+        {label: 'e-mail', map: 'email'}
+    ];
+}]);
+app.controller('cellTemplateCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
+        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency'},
+        {label: 'e-mail', map: 'email'},
+        {label: 'Favourite color', cellTemplateUrl: 'assets/template/custom.html'}
+    ];
+}]);
+app.controller('paginationCtrl', ['$scope', function (scope) {
+    var
+        nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+        familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+
+    function createRandomItem() {
+        var
+            firstName = nameList[Math.floor(Math.random() * 4)],
+            lastName = familyName[Math.floor(Math.random() * 4)],
+            age = Math.floor(Math.random() * 100),
+            email = firstName + lastName + '@whatever.com',
+            balance = Math.random() * 3000;
+
+        return{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            balance: balance
+        };
+    }
+
+    scope.rowCollection = [];
+    for (var j = 0; j < 200; j++) {
+        scope.rowCollection.push(createRandomItem());
+    }
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName'},
+        {label: 'Age', map: 'age'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+
+    scope.globalConfig = {
+        isPaginationEnabled: true,
+        itemsByPage: 12,
+        maxSize: 8
+    };
+}]);
+
+app.controller('configCtrl', ['$scope', function (scope) {
+
+    scope.rowCollectionColumn = [
+        {name: 'isSortable', description: 'tell whether we can sort by the given column', defaultValue: 'true'},
+        {name: 'isEditable', description: 'tell whether we can Edit the cell in the given column', defaultValue: 'false'},
+        {name: 'type', description: 'the type of the input if the column cells are editable', defaultValue: 'text'},
+        {name: 'headerTemplateUrl', description: 'the url to a custom template for the column header', defaultValue: 'partials/defaultHeader.html'},
+        {name: 'map', description: 'the property of the data model objects the column cell will be bound to', defaultValue: 'undefined'},
+        {name: 'label', description: 'the label of the header column', defaultValue: 'undefined'},
+        {name: 'sortPredicate', description: 'the predicate to use when we sort by the column', defaultValue: 'undefined'},
+        {name: 'formatFunction', description: 'the function or the filter name to use when formatting the column cells', defaultValue: 'undefined'},
+        {name: 'formatParameter', description: 'a parameter to pass to the formatFunction', defaultValue: 'undefined'},
+        {name: 'cellTemplateUrl', description: 'the url of the template if custom template is used for the column cells', defaultValue: 'undefined'},
+        {name: 'headerClass', description: 'a class name to add to the column header', defaultValue: 'undefined'},
+        {name: 'cellClass', description: 'a class name to add to the column cells', defaultValue: 'undefined'}
+    ];
+
+    scope.rowCollectionConfig = [
+        {name: 'selectionMode', description: 'the selection mode used ("multiple","single","none"', defaultValue: 'none'},
+        {name: 'isGlobalSearchActivated', description: 'display or not a input to filter data rows globally', defaultValue: 'false'},
+        {name: 'displaySelectionCheckBox', description: 'if in multiple selection mode tell whether to display a column with checkbox for selection', defaultValue: 'false'},
+        {name: 'isPaginationEnabled', description: 'tell whether to display the pagination at the bottom of the table', defaultValue: 'true'},
+        {name: 'itemsByPage', description: 'the number of items displayed by page', defaultValue: '10'},
+        {name: 'maxSize', description: 'the maximum number of page links to display at the bottom', defaultValue: '5'},
+        {name: 'sortAlgorithm', description: 'a function if you want to use your own sort algorithm', defaultValue: 'undefined'},
+        {name: 'filterAlgorithm', description: 'a function if you want to use your own filter algorithm', defaultValue: 'undefined'}
+    ];
+
+    scope.columnCollection = [
+        {label: 'Property Name', map: 'name', cellClass: 'property-name'},
+        {label: 'Description', map: 'description'},
+        {label: 'Default value', map: 'defaultValue'}
+    ];
+}]);
+
+/**
+ * Prism: Lightweight, robust, elegant syntax highlighting
+ * MIT license http://www.opensource.org/licenses/mit-license.php/
+ * @author Lea Verou http://lea.verou.me
+ */(function(){var e=/\blang(?:uage)?-(?!\*)(\w+)\b/i,t=self.Prism={util:{type:function(e){return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1]},clone:function(e){var n=t.util.type(e);switch(n){case"Object":var r={};for(var i in e)e.hasOwnProperty(i)&&(r[i]=t.util.clone(e[i]));return r;case"Array":return e.slice()}return e}},languages:{extend:function(e,n){var r=t.util.clone(t.languages[e]);for(var i in n)r[i]=n[i];return r},insertBefore:function(e,n,r,i){i=i||t.languages;var s=i[e],o={};for(var u in s)if(s.hasOwnProperty(u)){if(u==n)for(var a in r)r.hasOwnProperty(a)&&(o[a]=r[a]);o[u]=s[u]}return i[e]=o},DFS:function(e,n){for(var r in e){n.call(e,r,e[r]);t.util.type(e)==="Object"&&t.languages.DFS(e[r],n)}}},highlightAll:function(e,n){var r=document.querySelectorAll('code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code');for(var i=0,s;s=r[i++];)t.highlightElement(s,e===!0,n)},highlightElement:function(r,i,s){var o,u,a=r;while(a&&!e.test(a.className))a=a.parentNode;if(a){o=(a.className.match(e)||[,""])[1];u=t.languages[o]}if(!u)return;r.className=r.className.replace(e,"").replace(/\s+/g," ")+" language-"+o;a=r.parentNode;/pre/i.test(a.nodeName)&&(a.className=a.className.replace(e,"").replace(/\s+/g," ")+" language-"+o);var f=r.textContent;if(!f)return;f=f.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\u00a0/g," ");var l={element:r,language:o,grammar:u,code:f};t.hooks.run("before-highlight",l);if(i&&self.Worker){var c=new Worker(t.filename);c.onmessage=function(e){l.highlightedCode=n.stringify(JSON.parse(e.data),o);l.element.innerHTML=l.highlightedCode;s&&s.call(l.element);t.hooks.run("after-highlight",l)};c.postMessage(JSON.stringify({language:l.language,code:l.code}))}else{l.highlightedCode=t.highlight(l.code,l.grammar,l.language);l.element.innerHTML=l.highlightedCode;s&&s.call(r);t.hooks.run("after-highlight",l)}},highlight:function(e,r,i){return n.stringify(t.tokenize(e,r),i)},tokenize:function(e,n,r){var i=t.Token,s=[e],o=n.rest;if(o){for(var u in o)n[u]=o[u];delete n.rest}e:for(var u in n){if(!n.hasOwnProperty(u)||!n[u])continue;var a=n[u],f=a.inside,l=!!a.lookbehind||0;a=a.pattern||a;for(var c=0;c<s.length;c++){var h=s[c];if(s.length>e.length)break e;if(h instanceof i)continue;a.lastIndex=0;var p=a.exec(h);if(p){l&&(l=p[1].length);var d=p.index-1+l,p=p[0].slice(l),v=p.length,m=d+v,g=h.slice(0,d+1),y=h.slice(m+1),b=[c,1];g&&b.push(g);var w=new i(u,f?t.tokenize(p,f):p);b.push(w);y&&b.push(y);Array.prototype.splice.apply(s,b)}}}return s},hooks:{all:{},add:function(e,n){var r=t.hooks.all;r[e]=r[e]||[];r[e].push(n)},run:function(e,n){var r=t.hooks.all[e];if(!r||!r.length)return;for(var i=0,s;s=r[i++];)s(n)}}},n=t.Token=function(e,t){this.type=e;this.content=t};n.stringify=function(e,r,i){if(typeof e=="string")return e;if(Object.prototype.toString.call(e)=="[object Array]")return e.map(function(t){return n.stringify(t,r,e)}).join("");var s={type:e.type,content:n.stringify(e.content,r,i),tag:"span",classes:["token",e.type],attributes:{},language:r,parent:i};s.type=="comment"&&(s.attributes.spellcheck="true");t.hooks.run("wrap",s);var o="";for(var u in s.attributes)o+=u+'="'+(s.attributes[u]||"")+'"';return"<"+s.tag+' class="'+s.classes.join(" ")+'" '+o+">"+s.content+"</"+s.tag+">"};if(!self.document){self.addEventListener("message",function(e){var n=JSON.parse(e.data),r=n.language,i=n.code;self.postMessage(JSON.stringify(t.tokenize(i,t.languages[r])));self.close()},!1);return}var r=document.getElementsByTagName("script");r=r[r.length-1];if(r){t.filename=r.src;document.addEventListener&&!r.hasAttribute("data-manual")&&document.addEventListener("DOMContentLoaded",t.highlightAll)}})();;
+Prism.languages.markup={comment:/&lt;!--[\w\W]*?--(&gt;|&gt;)/g,prolog:/&lt;\?.+?\?&gt;/,doctype:/&lt;!DOCTYPE.+?&gt;/,cdata:/&lt;!\[CDATA\[[\w\W]+?]]&gt;/i,tag:{pattern:/&lt;\/?[\w:-]+\s*(?:\s+[\w:-]+(?:=(?:("|')(\\?[\w\W])*?\1|\w+))?\s*)*\/?&gt;/gi,inside:{tag:{pattern:/^&lt;\/?[\w:-]+/i,inside:{punctuation:/^&lt;\/?/,namespace:/^[\w-]+?:/}},"attr-value":{pattern:/=(?:('|")[\w\W]*?(\1)|[^\s>]+)/gi,inside:{punctuation:/=|&gt;|"/g}},punctuation:/\/?&gt;/g,"attr-name":{pattern:/[\w:-]+/g,inside:{namespace:/^[\w-]+?:/}}}},entity:/&amp;#?[\da-z]{1,8};/gi};Prism.hooks.add("wrap",function(e){e.type==="entity"&&(e.attributes.title=e.content.replace(/&amp;/,"&"))});;
+Prism.languages.css={comment:/\/\*[\w\W]*?\*\//g,atrule:/@[\w-]+?(\s+[^;{]+)?(?=\s*{|\s*;)/gi,url:/url\((["']?).*?\1\)/gi,selector:/[^\{\}\s][^\{\}]*(?=\s*\{)/g,property:/(\b|\B)[a-z-]+(?=\s*:)/ig,string:/("|')(\\?.)*?\1/g,important:/\B!important\b/gi,ignore:/&(lt|gt|amp);/gi,punctuation:/[\{\};:]/g};Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{style:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/style(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)style[\w\W]*?(>|&gt;)|(&lt;|<)\/style(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.css}}});;
+Prism.languages.clike={comment:{pattern:/(^|[^\\])(\/\*[\w\W]*?\*\/|[^:]\/\/.*?(\r?\n|$))/g,lookbehind:!0},string:/("|')(\\?.)*?\1/g,keyword:/\b(if|else|while|do|for|return|in|instanceof|function|new|try|catch|finally|null|break|continue)\b/g,"boolean":/\b(true|false)\b/g,number:/\b-?(0x)?\d*\.?[\da-f]+\b/g,operator:/[-+]{1,2}|!|=?&lt;|=?&gt;|={1,2}|(&amp;){1,2}|\|?\||\?|\*|\//g,ignore:/&(lt|gt|amp);/gi,punctuation:/[{}[\];(),.:]/g};;
+Prism.languages.javascript=Prism.languages.extend("clike",{keyword:/\b(var|let|if|else|while|do|for|return|in|instanceof|function|new|with|typeof|try|catch|finally|null|break|continue)\b/g,number:/\b(-?(0x)?\d*\.?[\da-f]+|NaN|-?Infinity)\b/g});Prism.languages.insertBefore("javascript","keyword",{regex:{pattern:/(^|[^/])\/(?!\/)(\[.+?]|\\.|[^/\r\n])+\/[gim]{0,3}(?=\s*($|[\r\n,.;})]))/g,lookbehind:!0}});Prism.languages.markup&&Prism.languages.insertBefore("markup","tag",{script:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)[\w\W]*?(&lt;|<)\/script(>|&gt;)/ig,inside:{tag:{pattern:/(&lt;|<)script[\w\W]*?(>|&gt;)|(&lt;|<)\/script(>|&gt;)/ig,inside:Prism.languages.markup.tag.inside},rest:Prism.languages.javascript}}});;
+(function(){function e(e,t){return Array.prototype.slice.call((t||document).querySelectorAll(e))}function n(e,t,n){var r=t.replace(/\s+/g,"").split(","),i=+e.getAttribute("data-line-offset")||0,s=parseFloat(getComputedStyle(e).lineHeight);for(var o=0,u;u=r[o++];){u=u.split("-");var a=+u[0],f=+u[1]||a,l=document.createElement("div");l.textContent=Array(f-a+2).join(" \r\n");l.className=(n||"")+" line-highlight";l.setAttribute("data-start",a);f>a&&l.setAttribute("data-end",f);l.style.top=(a-i-1)*s+"px";(e.querySelector("code")||e).appendChild(l)}}function r(){var t=location.hash.slice(1);e(".temporary.line-highlight").forEach(function(e){e.parentNode.removeChild(e)});var r=(t.match(/\.([\d,-]+)$/)||[,""])[1];if(!r||document.getElementById(t))return;var i=t.slice(0,t.lastIndexOf(".")),s=document.getElementById(i);if(!s)return;s.hasAttribute("data-line")||s.setAttribute("data-line","");n(s,r,"temporary ");document.querySelector(".temporary.line-highlight").scrollIntoView()}if(!window.Prism)return;var t=crlf=/\r?\n|\r/g,i=0;Prism.hooks.add("after-highlight",function(t){var s=t.element.parentNode,o=s&&s.getAttribute("data-line");if(!s||!o||!/pre/i.test(s.nodeName))return;clearTimeout(i);e(".line-highlight",s).forEach(function(e){e.parentNode.removeChild(e)});n(s,o);i=setTimeout(r,1)});addEventListener("hashchange",r)})();;
+
+angular.module('ui.bootstrap.tabs', [])
+.controller('TabsController', ['$scope', '$element', function($scope, $element) {
+  var panes = $scope.panes = [];
+
+  this.select = $scope.select = function selectPane(pane) {
+    angular.forEach(panes, function(pane) {
+      pane.selected = false;
+    });
+    pane.selected = true;
+  };
+
+  this.addPane = function addPane(pane) {
+    if (!panes.length) {
+      $scope.select(pane);
+    }
+    panes.push(pane);
+  };
+
+  this.removePane = function removePane(pane) { 
+    var index = panes.indexOf(pane);
+    panes.splice(index, 1);
+    //Select a new pane if removed pane was selected 
+    if (pane.selected && panes.length > 0) {
+      $scope.select(panes[index < panes.length ? index : index-1]);
+    }
+  };
+}])
+.directive('tabs', function() {
+  return {
+    restrict: 'EA',
+    transclude: true,
+    scope: {},
+    controller: 'TabsController',
+    templateUrl: 'assets/template/tabs.html',
+    replace: true
+  };
+})
+.directive('pane', ['$parse', function($parse) {
+  return {
+    require: '^tabs',
+    restrict: 'EA',
+    transclude: true,
+    scope:{
+      heading:'@'
+    },
+    link: function(scope, element, attrs, tabsCtrl) {
+      var getSelected, setSelected;
+      scope.selected = false;
+      if (attrs.active) {
+        getSelected = $parse(attrs.active);
+        setSelected = getSelected.assign;
+        scope.$watch(
+          function watchSelected() {return getSelected(scope.$parent);},
+          function updateSelected(value) {scope.selected = value;}
+        );
+        scope.selected = getSelected ? getSelected(scope.$parent) : false;
+      }
+      scope.$watch('selected', function(selected) {
+        if(selected) {
+          tabsCtrl.select(scope);
+        }
+        if(setSelected) {
+          setSelected(scope.$parent, selected);
+        }
+      });
+
+      tabsCtrl.addPane(scope);
+      scope.$on('$destroy', function() {
+        tabsCtrl.removePane(scope);
+      });
+    },
+    templateUrl: 'assets/template/pane.html',
+    replace: true
+  };
+}]);
