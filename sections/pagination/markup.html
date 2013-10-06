@@ -1,11 +1,14 @@
 <section id="section-pagination" ng-controller="paginationCtrl">
     <h2>Client side Pagination</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>If you don't want to display too much data at the time you'll be happy using the pagination feature. It uses the <a href="https://github.com/angular-ui/bootstrap/tree/master/src/pagination">angular.ui-boostrap pagination directive</a> and you'll be able
         to configure it through some global config properties. First of all, the property <em>isPaginationEnabled</em> must be set to true. Then you can decide the
         number of pages you want to display with the <em>maxSize</em> property and the number of items you want to display on a page thanks to the <em>itemsByPage</em> property</p>
-    <p class="note"><i class="icon-white icon-tags"></i>You may wonder why it has been decided to implement a client side pagination and not a server side pagination. Well in my opinion it does not
+    <ul class="note"><li>You may wonder why it has been decided to implement a client side pagination and not a server side pagination. Well in my opinion it does not
         make sens to have the pagination on server side when you have the sort/filter on the client side. If you sort the data on the client side, but some are not loaded yet do you think the displayed
-        data are really relevant. I don't.</p>
+        data are really relevant. I don't.</li>
+    <li>the event "pageChange" is emitted when the page is changed</li>
+    </ul>
 
     <tabs>
         <pane heading="JavaScript">

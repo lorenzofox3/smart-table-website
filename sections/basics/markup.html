@@ -1,6 +1,6 @@
 <section id="section-basics" ng-controller="basicsCtrl">
     <h2>The basics</h2>
-
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>
         If you want to display data in a table it is really easy. You simply have to add the <em>smart-table</em> directive
         into your markup (it is an element directive) and bind the <em>rows</em> (see markup tab) attribute
@@ -11,7 +11,7 @@
         <li><i class="icon-white icon-tags"></i>Without anything else, the table will use all the keys (which don't start with '$' to avoid collision
             with angular related properties) as headers for the table
         </li>
-        <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by columns as the
+        <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by column as the
             columns are sortable by default
         </li>
     </ul>
@@ -43,6 +43,8 @@
         is the property in our data-model object we want a given column
         to be bound to. A column will be inserted by column configuration.
     </p>
+
+    <p class="note">The mapping can support multi-level mapping like "myObject.myInnerProperty"</p>
 
     <div class="tab-container">
         <tabs>

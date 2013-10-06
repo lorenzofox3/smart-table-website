@@ -1,5 +1,6 @@
 <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
     <h2>Cell Template</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
         this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
@@ -7,9 +8,9 @@
         <pre ><code class="language-javascript">scope.column;//the column ojbect
 scope.dataRow;//the data row object
 scope.formatedValue;//the formated value (not the raw string)</code></pre>
-    <p class="note"><i class="icon-white icon-tags"></i>You can use the table controller api in your directive</p>
-    <p class="note"><i class="icon-white icon-tags"></i>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
-        in your template/directive</P>
+    <ul class="note"><li>You can use the table controller api in your directive</li>
+    <li>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
+        in your template/directive</li></ul>
     <tabs>
         <pane heading="javascript">
                 <pre class="language-javascript"><code

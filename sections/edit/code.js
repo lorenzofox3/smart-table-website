@@ -5,6 +5,10 @@ app.controller('editCtrl', ['$scope', function (scope) {
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
 
+    scope.$on('updateDataRow', function (event, arg) {
+        console.log(arg);
+    });
+
     scope.columnCollection = [
         {label: 'First Name', map: 'firstName', isEditable: true},
         {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},

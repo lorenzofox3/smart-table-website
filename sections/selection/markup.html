@@ -1,12 +1,19 @@
 <section id="section-selection" ng-controller="selectionCtrl">
     <h2>Select data rows</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
         property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
         a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
         on the other hand it allows the parent scope to quickly have a list of the selected items without relying on events. If you are in selectionMode="multiple" you can add a selection checkbox
         column by setting the global property <em>displaySelectionCheckbox</em> to true</p>
-    <p class="note"><i class="icon-white icon-tags"></i> Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
+    <p class="note">Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
         to 'none' with a selected item, the item will remain selected. It is the responsability of the parent scope/controller to reset the selected item</p>
+
+    <h3>Keep track of the changes in selection</h3>
+    <p>As mentioned before, whenever a row is selected/unselected the property isSelected change on the particular bound item. You can of course watch your model
+        to see when the selected items change however this is not really efficient regarding the performances. That is why an <em>selectionChange</em> event is emitted every time
+        there is something changed.
+    </p>
 
     <tabs>
         <pane heading="javascript">
@@ -24,6 +31,12 @@
         {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
         {label: 'e-mail', map: 'email'}
     ];
+
+    //keep track of selected items
+    scope.$on('selectionChange', function (event, args) {
+        console.log(args);
+    });
+
     scope.globalConfig = {
         selectionMode: 'multiple',
         displaySelectionCheckbox: true
@@ -52,4 +65,6 @@
     <ul class="output-list">
         <li ng-repeat="row in rowCollection">{{ row | json}}</li>
     </ul>
+
+
 </section>

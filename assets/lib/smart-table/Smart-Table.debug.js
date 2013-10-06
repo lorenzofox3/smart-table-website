@@ -342,7 +342,7 @@
             selectionMode: 'none',
             isGlobalSearchActivated: false,
             displaySelectionCheckbox: false,
-            isPaginationEnabled: true,
+            isPaginationEnabled: false,
             itemsByPage: 10,
             maxSize: 5,
 

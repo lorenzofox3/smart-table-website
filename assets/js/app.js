@@ -44,6 +44,21 @@ app.directive('columnFilter', function () {
 app.controller('mainCtrl', ['$scope', function (scope) {
     scope.greeting = 'hello Laurent';
 }]);
+
+app.directive('scrollTreshold', ['$window', function (window) {
+    return {
+        link: function (scope, element, attr) {
+            var treshold = attr.scrollTreshold || 100;
+            window.addEventListener('scroll', function (event) {
+                if (window.scrollY > treshold) {
+                    element.addClass('scroll-treshold');
+                } else {
+                    element.removeClass('scroll-treshold');
+                }
+            });
+        }
+    }
+}]);
 app.controller('basicsCtrl', ['$scope', function (scope) {
     scope.rowCollection = [
         {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
@@ -128,9 +143,13 @@ app.controller('selectionCtrl', ['$scope', function (scope) {
         {label: 'e-mail', map: 'email'}
     ];
     scope.globalConfig = {
-        selectionMode: 'multiple',
-        displaySelectionCheckbox: true
+        selectionMode: 'single',
+        displaySelectionCheckbox: false
     };
+
+    scope.$on('selectionChange', function (event, args) {
+        console.log(args);
+    });
 
     scope.canDisplayCheckbox = function () {
         return scope.globalConfig.selectionMode === 'multiple';
@@ -143,6 +162,10 @@ app.controller('editCtrl', ['$scope', function (scope) {
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
+
+    scope.$on('updateDataRow', function (event, arg) {
+        console.log(arg);
+    });
 
     scope.columnCollection = [
         {label: 'First Name', map: 'firstName', isEditable: true},
@@ -184,6 +207,48 @@ app.controller('cellTemplateCtrl', ['$scope', function (scope) {
         {label: 'e-mail', map: 'email'},
         {label: 'Favourite color', cellTemplateUrl: 'assets/template/custom.html'}
     ];
+}]);
+
+app.controller('paginationCtrl', ['$scope', function (scope) {
+    var
+        nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+        familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+
+    function createRandomItem() {
+        var
+            firstName = nameList[Math.floor(Math.random() * 4)],
+            lastName = familyName[Math.floor(Math.random() * 4)],
+            age = Math.floor(Math.random() * 100),
+            email = firstName + lastName + '@whatever.com',
+            balance = Math.random() * 3000;
+
+        return{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            balance: balance
+        };
+    }
+
+    scope.rowCollection = [];
+    for (var j = 0; j < 200; j++) {
+        scope.rowCollection.push(createRandomItem());
+    }
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName'},
+        {label: 'Age', map: 'age'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+
+    scope.globalConfig = {
+        isPaginationEnabled: true,
+        itemsByPage: 12,
+        maxSize: 8
+    };
 }]);
 
 app.controller('configCtrl', ['$scope', function (scope) {

@@ -8,30 +8,70 @@
     <script src="assets/lib/smart-table/Smart-Table.debug.js"></script>
     <script src="assets/js/app.js"></script>
     <link rel="stylesheet" href="assets/css/mainStyle.css"/>
-    <link rel="stylesheet" href="assets/css/bootstrap.css"/>
+    <!--<link rel="stylesheet" href="assets/css/bootstrap.css"/>-->
     <link rel="stylesheet" href="assets/lib/prism/prism.css"/>
 </head>
 <body ng-controller="mainCtrl">
 <header>
     <h1 class="banner">Smart Table</h1>
-    <a class="btn" href="https://github.com/lorenzofox3/Smart-Table"><i class="icon-download-alt"></i>Code on github</a>
-    <ul class="menu">
-        <li><a href="#section-basics" class="btn">The basics</a></li>
-        <li><a href="#section-format" class="btn">Format data</a></li>
-        <li><a href="#section-sort" class="btn">Sort data</a></li>
-        <li><a href="#section-filter" class="btn">Filter data</a></li>
-        <li><a href="#section-selection" class="btn">Select row(s)</a></li>
-        <li><a href="#section-edit" class="btn">Edit cell(s)</a></li>
-        <li><a href="#section-style" class="btn">Simple style</a></li>
-        <li><a href="#section-cellTemplate" class="btn">Cell template</a></li>
-        <li><a href="#section-pagination" class="btn">Pagination</a></li>
-        <li><a href="#section-config" class="btn">Summary</a></li>
-    </ul>
+    <a class="git btn" href="https://github.com/lorenzofox3/Smart-Table"><i class="icon-white icon-download-alt"></i>Code on github</a>
+    <nav class="menu" scroll-treshold="100"><ul>
+        <li><a href="#section-intro">Introduction</a></li>
+        <li><a href="#section-basics">The basics</a></li>
+        <li><a href="#section-format">Format data</a></li>
+        <li><a href="#section-sort">Sort data</a></li>
+        <li><a href="#section-filter">Filter data</a></li>
+        <li><a href="#section-selection">Select row(s)</a></li>
+        <li><a href="#section-edit">Edit cell(s)</a></li>
+        <li><a href="#section-style">Simple style</a></li>
+        <li><a href="#section-cellTemplate">Cell template</a></li>
+        <li><a href="#section-pagination">Pagination</a></li>
+        <li><a href="#section-config">Summary</a></li>
+    </ul></nav>
 </header>
 <div class="main">
+<section id="section-intro" ng-controller="paginationCtrl">
+    <h2>Introduction</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+
+    <p><strong>Smart table</strong> is an <a href="#">Angularjs</a> module to easily display data in a table with a set
+        of built in functionalities such filetering,
+        sorting, etc. While developing this module I made sure to focus on this particular points:</p>
+    <ul>
+        <li><strong>lightweight</strong>: smart-table is less than 13kb minified and has <strong>no
+            dependencies</strong> other than Angular itself
+        </li>
+        <li><strong>robust</strong>: smart-table is widely tested which makes the module really stable</li>
+        <li><strong>useful</strong>: smart-table will allow you to have a table on which you will be able to perform
+            common operations with <strong>simple</strong> configuration
+        </li>
+        <li><strong>developer friendly</strong>: the design of the module has been thought carefully and it is really
+            easy to get into the source code to modify/customise the module to best fit your needs.
+            You will find for example:
+            <ul>
+                <li>on the <a href="#">different branches</a> of the project some custom implementation to turn
+                    smart-table into a server driven table while changing less than 10 lines
+                </li>
+
+                <li>on <a href="#">plunker</a>(here made by "bob") some custom implementation with richer
+                    functionalities
+                </li>
+            </ul>
+    </ul>
+
+
+    <p>Although smart-table is from far the best table module for angular :D, there are other table modules in the
+        angular ecosystem you might be interested in. The approach and philosophy are different and maybe more appropriate to you way of building web application. Among the most popular:</p>
+    <ul>
+        <li><a href="#">ng-grid</a></li>
+        <li><a href="#">ng-table</a></li>
+    </ul>
+
+
+</section>
 <section id="section-basics" ng-controller="basicsCtrl">
     <h2>The basics</h2>
-
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>
         If you want to display data in a table it is really easy. You simply have to add the <em>smart-table</em> directive
         into your markup (it is an element directive) and bind the <em>rows</em> (see markup tab) attribute
@@ -42,7 +82,7 @@
         <li><i class="icon-white icon-tags"></i>Without anything else, the table will use all the keys (which don't start with '$' to avoid collision
             with angular related properties) as headers for the table
         </li>
-        <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by columns as the
+        <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by column as the
             columns are sortable by default
         </li>
     </ul>
@@ -75,6 +115,8 @@
         to be bound to. A column will be inserted by column configuration.
     </p>
 
+    <p class="note">The mapping can support multi-level mapping like "myObject.myInnerProperty"</p>
+
     <div class="tab-container">
         <tabs>
             <pane heading="JavaScript">
@@ -105,8 +147,9 @@
 </section>
 <section id="section-format" ng-controller="formatCtrl">
     <h2>Format data</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>
-        In our previous examples the data were display as raw strings,but what if we want to format date, currency and so on in a propert way ?
+        In our previous examples the data were displayed as raw strings,but what if we want to format date, currency and so on in a proper way ?
         In the column configuration, you can specify how to format the data for the given column by adding <em>formatFunction</em> and <em>formatParameter</em>
         properties.
     </p>
@@ -156,6 +199,7 @@
 </section>
 <section id="section-sort" ng-controller="sortCtrl">
     <h2>Sort data</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You may also want to sort the data rows. By default the table sort the data rows following the <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy</a> angular algorithm but you can also use your own
         algorithm (see below). When you click on one of the column header the orderBy algorithm will sort the data rows according to these rules
     </p>
@@ -164,7 +208,7 @@
         <li>otherwise it will use the property name the column is mapped to as predicate for the orderBy algorithm (it simply means it will sort the data rows according to the clicked column values) </li>
     </ul>
 
-    <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> porperty to false (it is true by default)</p>
+    <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> property to false (it is true by default)</p>
     <tabs>
         <pane heading="JavaScript">
 <pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
@@ -195,7 +239,7 @@
     <div class="table-container">
         <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
     </div>
-    <h4>Use your own algorithm</h4>
+    <h3>Use your own algorithm</h3>
     <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes.
         You can bind the table-configuration attribute to an object that will represent the table "global" configuration. One of the global property is the
         sort algorithm (<em>sortAlgorithm</em>).
@@ -207,9 +251,10 @@
 </section>
 <section id="section-filter" ng-controller="filterCtrl">
     <h2>Search/filter data</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>The <a href="#">table controller API</a> gives you a way to filter the data comparing an input to both a given column values or in the whole table.
         To display an input textbox for a global search (in the whole table) you just have to set the <em>isGlobalSearchActivated</em> property to true in the table global config object. The algorithm used
-        will be the one used bye the <a href="http://docs.angularjs.org/api/ng.filter:filter">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
+        will be the one used by the <a href="http://docs.angularjs.org/api/ng.filter:filter">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
     </p>
     <tabs>
         <pane heading="JavaScript">
@@ -242,7 +287,7 @@
     <div class="table-container">
         <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
     </div>
-    <h4>Use your own algorithm</h4>
+    <h3>Use your own algorithm</h3>
     <p>In the same way than for the sort operation you can use you own algorithm, you just have to specify the function you want to use in the global config
         under the property <em>filterAlgorithm</em></p>
 <pre><code class="language-javascript">function customFilter(arrayRef, expression) {
@@ -252,13 +297,20 @@
 </section>
 <section id="section-selection" ng-controller="selectionCtrl">
     <h2>Select data rows</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
         property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
         a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
         on the other hand it allows the parent scope to quickly have a list of the selected items without relying on events. If you are in selectionMode="multiple" you can add a selection checkbox
         column by setting the global property <em>displaySelectionCheckbox</em> to true</p>
-    <p class="note"><i class="icon-white icon-tags"></i> Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
+    <p class="note">Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
         to 'none' with a selected item, the item will remain selected. It is the responsability of the parent scope/controller to reset the selected item</p>
+
+    <h3>Keep track of the changes in selection</h3>
+    <p>As mentioned before, whenever a row is selected/unselected the property isSelected change on the particular bound item. You can of course watch your model
+        to see when the selected items change however this is not really efficient regarding the performances. That is why an <em>selectionChange</em> event is emitted every time
+        there is something changed.
+    </p>
 
     <tabs>
         <pane heading="javascript">
@@ -276,6 +328,12 @@
         {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
         {label: 'e-mail', map: 'email'}
     ];
+
+    //keep track of selected items
+    scope.$on('selectionChange', function (event, args) {
+        console.log(args);
+    });
+
     scope.globalConfig = {
         selectionMode: 'multiple',
         displaySelectionCheckbox: true
@@ -304,15 +362,23 @@
     <ul class="output-list">
         <li ng-repeat="row in rowCollection">{{ row | json}}</li>
     </ul>
+
+
 </section>
 <section id="section-edit" ng-controller="editCtrl">
     <h2>Edit cell</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can make the cells of a given column editable by simply setting the <em>isEditable</em> property to true in this column config. This will allow
         you to edit directly the property on the data model object. Therefore, you may want to specify which type of input the cell will accept. You just
         have to set the <em>type</em> property to the the type you want (email, number, etc). If the input is valid the model is updated, otherwise it will keep
         the previous value</p>
-    <p class="note"><i class="icon-white icon-tags"></i>The data will be filtered/sorted after editing accordingly to the last settings</p>
-    <p class="note"><i class="icon-white icon-tags"></i>Double click to edit</p>
+    <h3>notify an item has been updated</h3>
+    <p>In the same way than for selection changes, you don't want to watch the whole collection to know when a given property of a given item has bee updated. That
+    is why smart-table will raise the <em>updateDataRow</em> event to notify the parent scope when a row has been modified.</p>
+    <ul class="note">
+        <li>The data will be filtered/sorted after editing accordingly to the last settings</li>
+        <li>Double click to edit</li>
+    </ul>
     <tabs>
         <pane heading="javascript">
 <pre><code class="language-javascript">app.controller('editCtrl', ['$scope', function (scope) {
@@ -321,6 +387,11 @@
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
+
+    //every time a data row is updated
+    scope.$on('udpateDataRow', function (event, arg) {
+        console.log(arg);
+    });
 
     scope.columnCollection = [
         {label: 'First Name', map: 'firstName', isEditable: true},
@@ -346,6 +417,7 @@
 </section>
 <section id="section-style" ng-controller="styleCtrl">
     <h2>Simple styling</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>This allows you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
         <em>headerClass</em> and <em>cellClass</em> property in the column configuration</p>
     <tabs>
@@ -387,6 +459,7 @@ color: red;
 </section>
 <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
     <h2>Cell Template</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
         this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
@@ -394,9 +467,9 @@ color: red;
         <pre ><code class="language-javascript">scope.column;//the column ojbect
 scope.dataRow;//the data row object
 scope.formatedValue;//the formated value (not the raw string)</code></pre>
-    <p class="note"><i class="icon-white icon-tags"></i>You can use the table controller api in your directive</p>
-    <p class="note"><i class="icon-white icon-tags"></i>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
-        in your template/directive</P>
+    <ul class="note"><li>You can use the table controller api in your directive</li>
+    <li>If you use your own template you may break some functionalities (particularly the edit function) and you will have to implement them
+        in your template/directive</li></ul>
     <tabs>
         <pane heading="javascript">
                 <pre class="language-javascript"><code
@@ -508,8 +581,76 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
     </tabs>
 </section>
 
+<section id="section-pagination" ng-controller="paginationCtrl">
+    <h2>Client side Pagination</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <p>If you don't want to display too much data at the time you'll be happy using the pagination feature. It uses the <a href="https://github.com/angular-ui/bootstrap/tree/master/src/pagination">angular.ui-boostrap pagination directive</a> and you'll be able
+        to configure it through some global config properties. First of all, the property <em>isPaginationEnabled</em> must be set to true. Then you can decide the
+        number of pages you want to display with the <em>maxSize</em> property and the number of items you want to display on a page thanks to the <em>itemsByPage</em> property</p>
+    <ul class="note"><li>You may wonder why it has been decided to implement a client side pagination and not a server side pagination. Well in my opinion it does not
+        make sens to have the pagination on server side when you have the sort/filter on the client side. If you sort the data on the client side, but some are not loaded yet do you think the displayed
+        data are really relevant. I don't.</li>
+    <li>the event "pageChange" is emitted when the page is changed</li>
+    </ul>
+
+    <tabs>
+        <pane heading="JavaScript">
+<pre class="language-javascript"><code>app.controller('paginationCtrl', ['$scope', function (scope) {
+    var
+            nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+            familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+
+    function createRandomItem() {
+        var
+                firstName = nameList[Math.floor(Math.random() * 4)],
+                lastName = familyName[Math.floor(Math.random() * 4)],
+                age = Math.floor(Math.random() * 100),
+                email = firstName + lastName + '@whatever.com',
+                balance = Math.random() * 3000;
+
+        return{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            balance: balance
+        };
+    }
+
+    scope.rowCollection = [];
+    for (var j = 0; j < 200; j++) {
+        scope.rowCollection.push(createRandomItem());
+    }
+
+    scope.columnCollection = [
+        {label: 'First Name', map: 'firstName'},
+        {label: 'Last Name', map: 'lastName'},
+        {label: 'Age', map: 'age'},
+        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
+        {label: 'e-mail', map: 'email'}
+    ];
+
+    scope.globalConfig = {
+        isPaginationEnabled: true,
+        itemsByPage: 12,
+        maxSize: 8
+    };
+}]);</code></pre>
+        </pane>
+        <pane heading="markup">
+<pre class="language-markup" ng-non-bindable><code>&lt;div ng-controller="paginationCtrl">
+    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
+&lt;/div></code></pre>
+        </pane>
+    </tabs>
+
+    <div class="table-container">
+        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
+    </div>
+</section>
 <section id="section-config" ng-controller="configCtrl">
     <h2>Configuration Summary</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>Here is a summary of available configuration properties for column, and for global configuration</p>
     <h4>Column</h4>
     <div class="table-container">

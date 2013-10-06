@@ -1,5 +1,6 @@
 <section id="section-sort" ng-controller="sortCtrl">
     <h2>Sort data</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You may also want to sort the data rows. By default the table sort the data rows following the <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy</a> angular algorithm but you can also use your own
         algorithm (see below). When you click on one of the column header the orderBy algorithm will sort the data rows according to these rules
     </p>
@@ -8,7 +9,7 @@
         <li>otherwise it will use the property name the column is mapped to as predicate for the orderBy algorithm (it simply means it will sort the data rows according to the clicked column values) </li>
     </ul>
 
-    <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> porperty to false (it is true by default)</p>
+    <p>You can also disable the sort function for a given column by setting the <em>isSortable</em> property to false (it is true by default)</p>
     <tabs>
         <pane heading="JavaScript">
 <pre><code class="language-javascript">app.controller('sortCtrl', ['$scope', function (scope) {
@@ -39,7 +40,7 @@
     <div class="table-container">
         <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
     </div>
-    <h4>Use your own algorithm</h4>
+    <h3>Use your own algorithm</h3>
     <p>If you would like to use your own sort algorithm instead of the orderBy from Angular you also can. That is where our table configuration comes.
         You can bind the table-configuration attribute to an object that will represent the table "global" configuration. One of the global property is the
         sort algorithm (<em>sortAlgorithm</em>).

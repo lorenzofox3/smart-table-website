@@ -17,8 +17,10 @@ module.exports = function (grunt) {
                 'sections/edit/code.js',
                 'sections/style/code.js',
                 'sections/cellTemplate/code.js',
+                'sections/pagination/code.js',
                 'sections/config/code.js'],
             html: ['sections/head/markup.html',
+                'sections/introduction/markup.html',
                 'sections/basics/markup.html',
                 'sections/format/markup.html',
                 'sections/sort/markup.html',
@@ -27,6 +29,7 @@ module.exports = function (grunt) {
                 'sections/edit/markup.html',
                 'sections/style/markup.html',
                 'sections/cellTemplate/markup.html',
+                'sections/pagination/markup.html',
                 'sections/config/markup.html',
                 'sections/foot/markup.html']
         },

@@ -1,11 +1,17 @@
 <section id="section-edit" ng-controller="editCtrl">
     <h2>Edit cell</h2>
+    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can make the cells of a given column editable by simply setting the <em>isEditable</em> property to true in this column config. This will allow
         you to edit directly the property on the data model object. Therefore, you may want to specify which type of input the cell will accept. You just
         have to set the <em>type</em> property to the the type you want (email, number, etc). If the input is valid the model is updated, otherwise it will keep
         the previous value</p>
-    <p class="note"><i class="icon-white icon-tags"></i>The data will be filtered/sorted after editing accordingly to the last settings</p>
-    <p class="note"><i class="icon-white icon-tags"></i>Double click to edit</p>
+    <h3>notify an item has been updated</h3>
+    <p>In the same way than for selection changes, you don't want to watch the whole collection to know when a given property of a given item has bee updated. That
+    is why smart-table will raise the <em>updateDataRow</em> event to notify the parent scope when a row has been modified.</p>
+    <ul class="note">
+        <li>The data will be filtered/sorted after editing accordingly to the last settings</li>
+        <li>Double click to edit</li>
+    </ul>
     <tabs>
         <pane heading="javascript">
 <pre><code class="language-javascript">app.controller('editCtrl', ['$scope', function (scope) {
@@ -14,6 +20,11 @@
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
+
+    //every time a data row is updated
+    scope.$on('udpateDataRow', function (event, arg) {
+        console.log(arg);
+    });
 
     scope.columnCollection = [
         {label: 'First Name', map: 'firstName', isEditable: true},

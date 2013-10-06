@@ -13,9 +13,13 @@ app.controller('selectionCtrl', ['$scope', function (scope) {
         {label: 'e-mail', map: 'email'}
     ];
     scope.globalConfig = {
-        selectionMode: 'multiple',
-        displaySelectionCheckbox: true
+        selectionMode: 'single',
+        displaySelectionCheckbox: false
     };
+
+    scope.$on('selectionChange', function (event, args) {
+        console.log(args);
+    });
 
     scope.canDisplayCheckbox = function () {
         return scope.globalConfig.selectionMode === 'multiple';

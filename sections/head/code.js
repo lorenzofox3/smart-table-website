@@ -44,3 +44,18 @@ app.directive('columnFilter', function () {
 app.controller('mainCtrl', ['$scope', function (scope) {
     scope.greeting = 'hello Laurent';
 }]);
+
+app.directive('scrollTreshold', ['$window', function (window) {
+    return {
+        link: function (scope, element, attr) {
+            var treshold = attr.scrollTreshold || 100;
+            window.addEventListener('scroll', function (event) {
+                if (window.scrollY > treshold) {
+                    element.addClass('scroll-treshold');
+                } else {
+                    element.removeClass('scroll-treshold');
+                }
+            });
+        }
+    }
+}]);
