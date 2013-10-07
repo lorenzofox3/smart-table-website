@@ -32,7 +32,7 @@
 <div class="main">
 <section id="section-intro" ng-controller="paginationCtrl">
     <h2>Introduction</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/introduction"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
 
     <p><strong>Smart table</strong> is an <a href="#">Angularjs</a> module to easily display data in a table with a set
         of built in functionalities such filetering,
@@ -49,29 +49,25 @@
             easy to get into the source code to modify/customise the module to best fit your needs.
             You will find for example:
             <ul>
-                <li>on the <a href="#">different branches</a> of the project some custom implementation to turn
+                <li>on the <a href="https://github.com/lorenzofox3/Smart-Table/tree/server-sample">different branches</a> of the project some custom implementation to turn
                     smart-table into a server driven table while changing less than 10 lines
                 </li>
 
-                <li>on <a href="#">plunker</a>(here made by "bob") some custom implementation with richer
+                <li>on <a href="http://plnkr.co/edit/xsJs8m?p=preview">plunker</a>(here made by Jiri Kavulak) some custom implementation with richer
                     functionalities
                 </li>
             </ul>
     </ul>
-
-
     <p>Although smart-table is from far the best table module for angular :D, there are other table modules in the
         angular ecosystem you might be interested in. The approach and philosophy are different and maybe more appropriate to your way of building web application. Among the most popular:</p>
     <ul>
-        <li><a href="#">ng-grid</a></li>
-        <li><a href="#">ng-table</a></li>
+        <li><a href="http://angular-ui.github.io/ng-grid/">ng-grid</a></li>
+        <li><a href="http://esvit.github.io/ng-table/#!/">ng-table</a></li>
     </ul>
-
-
 </section>
 <section id="section-basics" ng-controller="basicsCtrl">
     <h2>The basics</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/basics"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>
         If you want to display data in a table it is really easy. You simply have to add the <em>smart-table</em> directive
         into your markup (it is an element directive) and bind the <em>rows</em> (see markup tab) attribute
@@ -147,7 +143,7 @@
 </section>
 <section id="section-format" ng-controller="formatCtrl">
     <h2>Format data</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/format"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>
         In our previous examples the data were displayed as raw strings,but what if we want to format date, currency and so on in a proper way ?
         In the column configuration, you can specify how to format the data for the given column by adding <em>formatFunction</em> and <em>formatParameter</em>
@@ -199,7 +195,7 @@
 </section>
 <section id="section-sort" ng-controller="sortCtrl">
     <h2>Sort data</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/sort"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You may also want to sort the data rows. By default the table sort the data rows following the <a href="http://docs.angularjs.org/api/ng.filter:orderBy">orderBy</a> angular algorithm but you can also use your own
         algorithm (see below). When you click on one of the column header the orderBy algorithm will sort the data rows according to these rules
     </p>
@@ -251,7 +247,7 @@
 </section>
 <section id="section-filter" ng-controller="filterCtrl">
     <h2>Search/filter data</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/filter"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>The <a href="#">table controller API</a> gives you a way to filter the data comparing an input to both a given column values or in the whole table.
         To display an input textbox for a global search (in the whole table) you just have to set the <em>isGlobalSearchActivated</em> property to true in the table global config object. The algorithm used
         will be the one used by the <a href="http://docs.angularjs.org/api/ng.filter:filter">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
@@ -297,7 +293,7 @@
 </section>
 <section id="section-selection" ng-controller="selectionCtrl">
     <h2>Select data rows</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/selection"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
         property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
         a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
@@ -367,7 +363,7 @@
 </section>
 <section id="section-edit" ng-controller="editCtrl">
     <h2>Edit cell</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/edit"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>You can make the cells of a given column editable by simply setting the <em>isEditable</em> property to true in this column config. This will allow
         you to edit directly the property on the data model object. Therefore, you may want to specify which type of input the cell will accept. You just
         have to set the <em>type</em> property to the the type you want (email, number, etc). If the input is valid the model is updated, otherwise it will keep
@@ -417,7 +413,7 @@
 </section>
 <section id="section-style" ng-controller="styleCtrl">
     <h2>Simple styling</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/style"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>This allows you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
         <em>headerClass</em> and <em>cellClass</em> property in the column configuration</p>
     <tabs>
@@ -459,7 +455,7 @@ color: red;
 </section>
 <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
     <h2>Cell Template</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/cellTemplate"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
         this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
@@ -583,7 +579,7 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
 
 <section id="section-pagination" ng-controller="paginationCtrl">
     <h2>Client side Pagination</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/pagination"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>If you don't want to display too much data at the time you'll be happy using the pagination feature. It uses the <a href="https://github.com/angular-ui/bootstrap/tree/master/src/pagination">angular.ui-boostrap pagination directive</a> and you'll be able
         to configure it through some global config properties. First of all, the property <em>isPaginationEnabled</em> must be set to true. Then you can decide the
         number of pages you want to display with the <em>maxSize</em> property and the number of items you want to display on a page thanks to the <em>itemsByPage</em> property</p>
@@ -650,7 +646,7 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
 </section>
 <section id="section-config" ng-controller="configCtrl">
     <h2>Configuration Summary</h2>
-    <a class="btn doc" href="#"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
+    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/config"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
     <p>Here is a summary of available configuration properties for column, and for global configuration</p>
     <h4>Column</h4>
     <div class="table-container">
