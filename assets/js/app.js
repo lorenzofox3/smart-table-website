@@ -264,6 +264,7 @@ app.controller('configCtrl', ['$scope', function (scope) {
         {name: 'formatFunction', description: 'the function or the filter name to use when formatting the column cells', defaultValue: 'undefined'},
         {name: 'formatParameter', description: 'a parameter to pass to the formatFunction', defaultValue: 'undefined'},
         {name: 'cellTemplateUrl', description: 'the url of the template if custom template is used for the column cells', defaultValue: 'undefined'},
+        {name: 'cellTemplate', description: 'custom template used for the column cells. Note: this property takes precedence over the cellTemplateUrl property if both are specified.', defaultValue: 'undefined'},
         {name: 'headerClass', description: 'a class name to add to the column header', defaultValue: 'undefined'},
         {name: 'cellClass', description: 'a class name to add to the column cells', defaultValue: 'undefined'}
     ];
