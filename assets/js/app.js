@@ -266,7 +266,8 @@ app.controller('configCtrl', ['$scope', function (scope) {
         {name: 'cellTemplateUrl', description: 'the url of the template if custom template is used for the column cells', defaultValue: 'undefined'},
         {name: 'cellTemplate', description: 'custom template used for the column cells. Note: this property takes precedence over the cellTemplateUrl property if both are specified.', defaultValue: 'undefined'},
         {name: 'headerClass', description: 'a class name to add to the column header', defaultValue: 'undefined'},
-        {name: 'cellClass', description: 'a class name to add to the column cells', defaultValue: 'undefined'}
+        {name: 'cellClass', description: 'a class name to add to the column cells - see <a href="http://docs.angularjs.org/api/ng.directive:ngClass">ngClass</a>', defaultValue: 'undefined'},
+        {name: 'cellStyle', description: 'a style to add to the cell - see <a href="http://docs.angularjs.org/api/ng.directive:ngStyle">ngStyle</a>', defaultValue: 'undefined'}
     ];
 
     scope.rowCollectionConfig = [
