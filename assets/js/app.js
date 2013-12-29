@@ -278,7 +278,9 @@ app.controller('configCtrl', ['$scope', function (scope) {
         {name: 'itemsByPage', description: 'the number of items displayed by page', defaultValue: '10'},
         {name: 'maxSize', description: 'the maximum number of page links to display at the bottom', defaultValue: '5'},
         {name: 'sortAlgorithm', description: 'a function if you want to use your own sort algorithm', defaultValue: 'undefined'},
-        {name: 'filterAlgorithm', description: 'a function if you want to use your own filter algorithm', defaultValue: 'undefined'}
+        {name: 'filterAlgorithm', description: 'a function if you want to use your own filter algorithm', defaultValue: 'undefined'},
+        {name: 'rowClassEven', description: 'a class name to add to the even rows - see <a href="http://docs.angularjs.org/api/ng.directive:ngClassEven">ngClassEven</a>', defaultValue: 'undefined'},
+        {name: 'rowClassOdd', description: 'a class name to add to the odd rows - see <a href="http://docs.angularjs.org/api/ng.directive:ngClassOdd">ngClassOdd</a>', defaultValue: 'undefined'}
     ];
 
     scope.columnCollection = [
