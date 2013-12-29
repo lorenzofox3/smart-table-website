@@ -20,7 +20,7 @@ app.directive('custom', ['$log', function (log) {
 
             var allowedColors = ['red', 'yellow', 'blue'];
 
-            //can use scope.dataRow, scope.column, scope.formatedValue, and ctrl API
+            //can use scope.dataRow, scope.column, scope.value, scope.formatedValue, and ctrl API
             scope.$watch('favouriteColor', function (value) {
                 if (allowedColors.indexOf(value) != -1) {
                     scope.dataRow.favouriteColor = scope.favouriteColor;

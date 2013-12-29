@@ -6,8 +6,8 @@ app.controller('styleCtrl', ['$scope', function (scope) {
     ];
 
     scope.columnCollection = [
-        {label: 'First Name', map: 'firstName', headerClass: "firstName-header"},
-        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', cellClass: "lastName-cell"},
+        {label: 'First Name', map: 'firstName', headerClass: "'firstName-header'"},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', cellClass: "'lastName-cell'"},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
         {label: 'e-mail', map: 'email'}
