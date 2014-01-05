@@ -20,7 +20,7 @@ app.directive('custom', ['$log', function (log) {
 
             var allowedColors = ['red', 'yellow', 'blue'];
 
-            //can use scope.dataRow, scope.column, scope.formatedValue, and ctrl API
+            //can use scope.dataRow, scope.column, scope.value, scope.formatedValue, and ctrl API
             scope.$watch('favouriteColor', function (value) {
                 if (allowedColors.indexOf(value) != -1) {
                     scope.dataRow.favouriteColor = scope.favouriteColor;
@@ -264,8 +264,10 @@ app.controller('configCtrl', ['$scope', function (scope) {
         {name: 'formatFunction', description: 'the function or the filter name to use when formatting the column cells', defaultValue: 'undefined'},
         {name: 'formatParameter', description: 'a parameter to pass to the formatFunction', defaultValue: 'undefined'},
         {name: 'cellTemplateUrl', description: 'the url of the template if custom template is used for the column cells', defaultValue: 'undefined'},
+        {name: 'cellTemplate', description: 'custom template used for the column cells. Note: this property takes precedence over the cellTemplateUrl property if both are specified.', defaultValue: 'undefined'},
         {name: 'headerClass', description: 'a class name to add to the column header', defaultValue: 'undefined'},
-        {name: 'cellClass', description: 'a class name to add to the column cells', defaultValue: 'undefined'}
+        {name: 'cellClass', description: 'a class name to add to the column cells - see <a href="http://docs.angularjs.org/api/ng.directive:ngClass">ngClass</a>', defaultValue: 'undefined'},
+        {name: 'cellStyle', description: 'a style to add to the cell - see <a href="http://docs.angularjs.org/api/ng.directive:ngStyle">ngStyle</a>', defaultValue: 'undefined'}
     ];
 
     scope.rowCollectionConfig = [
@@ -276,7 +278,9 @@ app.controller('configCtrl', ['$scope', function (scope) {
         {name: 'itemsByPage', description: 'the number of items displayed by page', defaultValue: '10'},
         {name: 'maxSize', description: 'the maximum number of page links to display at the bottom', defaultValue: '5'},
         {name: 'sortAlgorithm', description: 'a function if you want to use your own sort algorithm', defaultValue: 'undefined'},
-        {name: 'filterAlgorithm', description: 'a function if you want to use your own filter algorithm', defaultValue: 'undefined'}
+        {name: 'filterAlgorithm', description: 'a function if you want to use your own filter algorithm', defaultValue: 'undefined'},
+        {name: 'rowClassEven', description: 'a class name to add to the even rows - see <a href="http://docs.angularjs.org/api/ng.directive:ngClassEven">ngClassEven</a>', defaultValue: 'undefined'},
+        {name: 'rowClassOdd', description: 'a class name to add to the odd rows - see <a href="http://docs.angularjs.org/api/ng.directive:ngClassOdd">ngClassOdd</a>', defaultValue: 'undefined'}
     ];
 
     scope.columnCollection = [

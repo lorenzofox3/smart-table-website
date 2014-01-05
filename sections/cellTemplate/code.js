@@ -10,7 +10,7 @@ app.controller('cellTemplateCtrl', ['$scope', function (scope) {
         {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
-        {label: 'e-mail', map: 'email'},
+        {label: 'e-mail', map: 'email', cellTemplate: '<a href="mailto:{{formattedValue}}">{{formattedValue}}</a>'},
         {label: 'Favourite color', cellTemplateUrl: 'assets/template/custom.html'}
     ];
 }]);

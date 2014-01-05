@@ -1,8 +1,8 @@
 <section id="section-cellTemplate" ng-controller="cellTemplateCtrl">
     <h2>Cell Template</h2>
     <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/cellTemplate"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying the <em>cellTemplateUrl</em> property in the column config
-        this is useful not only for styling purpose but also if you want to enhance the behavior of the cell. The template will be compiled so that if it contains
+    <p>If you prefer to use a particular template for the cells in a given column, you can do it by specifying either the <em>cellTemplate</em> property or the <em>cellTemplateUrl</em> property in the column config
+        this is useful not only for styling purpose but also if you want to enhance the behaviour of the cell. The template will be compiled so that if it contains
         directives they will be considered as angular directives. Moreover, these directives can have access to all the row and column data through the scope
     </p>
         <pre ><code class="language-javascript">scope.column;//the column ojbect
@@ -26,7 +26,7 @@ scope.formatedValue;//the formated value (not the raw string)</code></pre>
         {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
-        {label: 'e-mail', map: 'email'},
+        {label: 'e-mail', map: 'email', cellTemplate: '<a="mailto:{{formattedValue}}">{{formattedValue}}</a>' },
         {label: 'Favourite color', cellTemplateUrl: 'assets/template/custom.html'}
     ];
 }]);</code></pre>

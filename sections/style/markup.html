@@ -1,8 +1,9 @@
 <section id="section-style" ng-controller="styleCtrl">
     <h2>Simple styling</h2>
     <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/style"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>This allows you to add a class name for the cells in a given column, and for the header as well. You'll have to specify the
-        <em>headerClass</em> and <em>cellClass</em> property in the column configuration</p>
+    <p>The <em>headerClass</em> and <em>headerStyle</em> provide styling through css-class/style for the column header.</p>
+    <p>The <em>cellClass</em> and <em>cellStyle</em> provide styling through css-class/style for the column header.</p>
+    <p>The <em>rowClassEven</em>, <em>rowClassOdd</em>, <em>rowStyleEven</em>, <em>rowStyleOdd</em> provide styling through css-class/style for rows with separation between eve and odd rows.</p>
     <tabs>
         <pane heading="javascript">
 <pre><code class="language-javascript">app.controller('styleCtrl', ['$scope', function (scope) {
@@ -13,8 +14,8 @@
     ];
 
     scope.columnCollection = [
-        {label: 'First Name', map: 'firstName', headerClass: "firstName-header"},
-        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', cellClass: "lastName-cell"},
+        {label: 'First Name', map: 'firstName', headerClass: "'firstName-header'"},
+        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', cellClass: "'lastName-cell'"},
         {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
         {label: 'Balance', map: 'balance', formatFunction: 'currency'},
         {label: 'e-mail', map: 'email'}
