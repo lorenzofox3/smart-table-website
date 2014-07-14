@@ -10,6 +10,10 @@ a{
     color: inherit;
 }
 
+p a{
+    color: #269;
+}
+
 strong{
     color: #269;
 }
