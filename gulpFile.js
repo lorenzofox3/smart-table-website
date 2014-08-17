@@ -8,6 +8,7 @@ var js = ['sections/head/code.js',
     'sections/filter/code.js',
     'sections/selection/code.js',
     'sections/pagination/code.js',
+    'sections/pipe/code.js',
     'sections/plugins/code.js'];
 var html = ['sections/head/markup.html',
     'sections/introduction/markup.html',
@@ -17,6 +18,7 @@ var html = ['sections/head/markup.html',
     'sections/filter/markup.html',
     'sections/selection/markup.html',
     'sections/pagination/markup.html',
+    'sections/pipe/markup.html',
     'sections/plugins/markup.html',
     'sections/foot/markup.html'];
 

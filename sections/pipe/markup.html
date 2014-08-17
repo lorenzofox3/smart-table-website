@@ -1,0 +1,148 @@
+<section id="section-pipe" class="clearfix" ng-controller="pipeCtrl">
+	<h2 class="h2">pipe/ajax plugin</h2>
+	<p>
+		This might be the most powerful plugin. When a directive calls the table controller api (sortBy, search, slice, ...) a variable representing the internal
+		table state is updated and a <em>pipe</em> function is called. By default it basically pipes the filter, sort and slice(pagination) operations on the bound array.
+		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function take as argument an object which represent
+		the table state.
+	</p>
+	<tabset><tab heading="markup">
+<pre ng-non-bindable><code class="language-markup">
+&lt;table st-table="rowCollection" st-pipe="callServer" class="table table-striped">
+	&lt;thead>
+	&lt;tr>
+		&lt;th st-sort="firstName">first name&lt;/th>
+		&lt;th st-sort="lastName">last name&lt;/th>
+		&lt;th st-sort="birthDate">birth date&lt;/th>
+		&lt;th st-sort="balance">balance&lt;/th>
+		&lt;th>email&lt;/th>
+	&lt;/tr>
+	&lt;tr>
+		&lt;th>
+			&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+		&lt;/th>
+		&lt;th colspan="4">
+			&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+		&lt;/th>
+	&lt;/tr>
+	&lt;/thead>
+	&lt;tbody ng-hide="isLoading">
+	&lt;tr ng-repeat="row in rowCollection">
+		&lt;td>{{row.firstName | uppercase}}&lt;/td>
+		&lt;td>{{row.lastName}}&lt;/td>
+		&lt;td>{{row.birthDate | date}}&lt;/td>
+		&lt;td>{{row.balance | currency}}&lt;/td>
+		&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+	&lt;/tr>
+	&lt;/tbody>
+	&lt;tbody ng-show="isLoading">
+			&lt;tr>
+				&lt;td colspan="5" class="text-center">&lt;div class="loading-indicator">&lt;/div>&lt;/td>
+			&lt;/tr>
+	&lt;/tbody>
+&lt;/table></code></pre>
+	</tab>
+		<tab heading="JavaScript">
+<pre><code class="language-javascript">app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
+    var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'];
+    var familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+    var promise = null;
+
+
+    $scope.isLoading = false;
+    $scope.rowCollection = [];
+
+
+    function createRandomItem() {
+        var
+            firstName = nameList[Math.floor(Math.random() * 4)],
+            lastName = familyName[Math.floor(Math.random() * 4)],
+            age = Math.floor(Math.random() * 100),
+            email = firstName + lastName + '@whatever.com',
+            balance = Math.random() * 3000;
+
+        return{
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            email: email,
+            balance: balance
+        };
+    }
+
+    function getAPage() {
+        $scope.rowCollection = [];
+        for (var j = 0; j < 20; j++) {
+            $scope.rowCollection.push(createRandomItem());
+        }
+    }
+
+    $scope.callServer = function getData(tableState) {
+
+        function callServer() {
+            //here you could create a query string from tableState
+            //fake ajax call
+            $scope.isLoading = true;
+
+            $timeout(function () {
+                getAPage();
+                $scope.isLoading = false;
+            }, 2000);
+        }
+
+
+        //throttle to avoid an http request on every keystroke in the search fields for examples
+        if (promise !== null) {
+            $timeout.cancel(promise);
+        }
+        promise = $timeout(function () {
+            callServer();
+            promise = null;
+        }, 500);
+    };
+
+    getAPage();
+}]);
+</code></pre>
+		</tab>
+	</tabset>
+	<div class="table-container">
+		<table st-table="rowCollection" st-pipe="callServer" class="table table-striped">
+			<thead>
+			<tr>
+				<th st-sort="firstName">first name</th>
+				<th st-sort="lastName">last name</th>
+				<th st-sort="birthDate">birth date</th>
+				<th st-sort="balance">balance</th>
+				<th>email</th>
+			</tr>
+			<tr>
+				<th>
+					<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+				</th>
+				<th colspan="4">
+					<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+				</th>
+			</tr>
+			</thead>
+			<tbody ng-hide="isLoading">
+			<tr ng-repeat="row in rowCollection">
+				<td>{{row.firstName | uppercase}}</td>
+				<td>{{row.lastName}}</td>
+				<td>{{row.birthDate | date}}</td>
+				<td>{{row.balance | currency}}</td>
+				<td><a ng-href="mailto:{{row.email}}">email</a></td>
+			</tr>
+			</tbody>
+			<tbody ng-show="isLoading">
+					<tr>
+						<td colspan="5" class="text-center"><div class="loading-indicator"></div></td>
+					</tr>
+			</tbody>
+		</table>
+	</div>
+	<p>Wow impressive, we just have plugged our table with a server. Of course in our example the data is random and not consistent with the event which triggered the request, but in reallity the server would sort, filter, slice according to the query</p>
+	<div class="text-center">
+		<a class="btn btn-primary" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/pipe"><i class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
+	</div>
+</section>
