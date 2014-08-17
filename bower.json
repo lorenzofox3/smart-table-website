@@ -1,0 +1,24 @@
+{
+  "name": "smart-table-website",
+  "version": "2.0.0",
+  "homepage": "https://github.com/lorenzofox3/smart-table-website",
+  "authors": [
+    "lorenzofox3 <laurent34azerty@gmail.com>"
+  ],
+  "description": "documentation website for smart table",
+  "main": "index.html",
+  "keywords": [
+    "angular",
+    "smart-table",
+    "table",
+    "grid"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,76 +1,75 @@
-<section id="section-basics" ng-controller="basicsCtrl">
-    <h2>The basics</h2>
-    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/basics"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>
-        If you want to display data in a table it is really easy. You simply have to add the <em>smart-table</em> tag
-        into your markup (it is an element directive) and bind the <em>rows</em> (see markup tab) attribute
-        to an array somewhere in the scope. In our example we specify the data used to fill the table in a
-        controller.
-    </p>
-    <ul class="note">
-        <li><i class="icon-white icon-tags"></i>Without anything else, the table will use all the keys (which don't start with '$' to avoid collision
-            with angular related properties) as headers for the table
-        </li>
-        <li><i class="icon-white icon-tags"></i>It will also take default configuration values : here for instance you can sort by column as the
-            columns are sortable by default
-        </li>
-    </ul>
-    <div class="tab-container">
-        <tabs>
-            <pane heading="JavaScript">
-                 <pre><code class="language-javascript">app.controller('basicsCtrl', ['$scope', function (scope) {
+<section class="clearfix container-fluid" id="section-basics" ng-controller="basicsCtrl">
+	<h2 class="h2">The basics</h2>
+	<div class="row">
+		<p class="text-justify">
+			The first thing is to add the module <code>angular.module('myApp',['smart-table']</code> to you angular
+			application.
+			Then use the markup you would normally do
+			for html tables. On the table element add the <code>st-table</code> attribute to tell smart-table which collection
+			holds you data. Now you will be able to compose the table using the plugins.
+		</p>
+	</div>
+
+			<tabset>
+				<tab heading="Markup">
+<pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
+	&lt;thead>
+	&lt;tr>
+		&lt;th>first name&lt;/th>
+		&lt;th>last name&lt;/th>
+		&lt;th>birth date&lt;/th>
+		&lt;th>balance&lt;/th>
+		&lt;th>email&lt;/th>
+	&lt;/tr>
+	&lt;/thead>
+	&lt;tbody>
+	&lt;tr ng-repeat="row in rowCollection">
+		&lt;td>{{row.firstName}}&lt;/td>
+		&lt;td>{{row.lastName}}&lt;/td>
+		&lt;td>{{row.birthDate}}&lt;/td>
+		&lt;td>{{row.balance}}&lt;/td>
+		&lt;td>{{row.email}}&lt;/td>
+	&lt;/tr>
+	&lt;/tbody>
+&lt;/table></code></pre>
+				</tab>
+				<tab heading="javascript">
+<pre><code class="language-javascript">app.controller('basicsCtrl', ['$scope', function (scope) {
     scope.rowCollection = [
         {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
-}]);</code></pre>
-            </pane>
-            <pane active heading="Markup">
-<pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="basicsCtrl">
-    &lt;smart-table rows="rowCollection">&lt;/smart-table>
-&lt;/div></code></pre>
-            </pane>
-        </tabs>
-    </div>
-    <div class="table-container">
-        <smart-table class="table table-striped" rows="rowCollection"></smart-table>
-    </div>
-    <p>
-        You can also specify the layout you want. That is where we introduce the column configuration. On our markup
-        we bind the <em>columns</em> attribute to an array in which we specify
-        how to display the data. The <em>label</em> property will give the header of the column whereas the <em>map</em> property
-        is the property in our data-model object we want a given column
-        to be bound to. A column will be inserted by column configuration.
-    </p>
+}]);
+</code></pre>
+				</tab>
+			</tabset>
+			<table st-table="rowCollection" class="table table-striped">
+				<thead>
+				<tr>
+					<th>first name</th>
+					<th>last name</th>
+					<th>birth date</th>
+					<th>balance</th>
+					<th>email</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="row in rowCollection">
+					<td>{{row.firstName}}</td>
+					<td>{{row.lastName}}</td>
+					<td>{{row.birthDate}}</td>
+					<td>{{row.balance}}</td>
+					<td>{{row.email}}</td>
+				</tr>
+				</tbody>
+			</table>
 
-    <p class="note">The mapping can support multi-level mapping like "myObject.myInnerProperty"</p>
+	<p class="text-justify">
+		Of course in this short example, smart-table does not bring much as we don't use any of the plugins but we are now ready to compose our table.
+	</p>
 
-    <div class="tab-container">
-        <tabs>
-            <pane heading="JavaScript">
-                 <pre><code class="language-javascript">app.controller('basicsCtrl', ['$scope', function (scope) {
-    scope.rowCollection = [
-        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
-        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
-        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
-    ];
-
-    scope.columnCollection = [
-        {label: 'First Name', map: 'firstName'},
-        {label: 'same same but different', map: 'firstName'},
-        {label: 'Last Name', map: 'lastName'}
-    ];
-}]);</code></pre>
-            </pane>
-            <pane active heading="Markup">
-            <pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="basicsCtrl">
-    &lt;smart-table columns="columnCollection" rows="rowCollection">&lt;/smart-table>
-&lt;/div></code></pre>
-            </pane>
-        </tabs>
-    </div>
-    <div class="table-container">
-        <smart-table class="table table-striped" columns="columnCollection" rows="rowCollection"></smart-table>
-    </div>
+	<div class="text-center"><a class="btn btn-primary"
+		 href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/basics"><i
+		class="glyphicon glyphicon-pencil"></i>improve the documentation</a></div>
 </section>

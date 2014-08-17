@@ -24,18 +24,4 @@ app.controller('paginationCtrl', ['$scope', function (scope) {
     for (var j = 0; j < 200; j++) {
         scope.rowCollection.push(createRandomItem());
     }
-
-    scope.columnCollection = [
-        {label: 'First Name', map: 'firstName'},
-        {label: 'Last Name', map: 'lastName'},
-        {label: 'Age', map: 'age'},
-        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
-        {label: 'e-mail', map: 'email'}
-    ];
-
-    scope.globalConfig = {
-        isPaginationEnabled: true,
-        itemsByPage: 12,
-        maxSize: 8
-    };
 }]);

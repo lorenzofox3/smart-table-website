@@ -1,46 +1,79 @@
-<section id="section-filter" ng-controller="filterCtrl">
-    <h2>Search/filter data</h2>
-    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/filter"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>The <a href="#">table controller API</a> gives you a way to filter the data comparing an input to both a given column values or in the whole table.
-        To display an input textbox for a global search (in the whole table) you just have to set the <em>isGlobalSearchActivated</em> property to true in the table global config object. The algorithm used
-        will be the one used by the <a href="http://docs.angularjs.org/api/ng.filter:filter">filter</a> filter from Angular. Of course, if you want to use your own, you can specify it in the global config (see below)
+<section id="section-filter" class="clearfix" ng-controller="filterCtrl">
+    <h2 class="h2">Search/filter data</h2>
+    <p>
+			The <code>stSearch</code> gives you a way to filter rows globally if you don't set any value to the attribute. Or you can also define the predicate to use as value of the directive attribute.
     </p>
-    <tabs>
-        <pane heading="JavaScript">
-<pre><code class="language-javascript">app.controller('filterCtrl', ['$scope', function (scope) {
+    <tabset><tab heading="markup">
+<pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
+	&lt;thead>
+	&lt;tr>
+		&lt;th st-sort="firstName">first name&lt;/th>
+		&lt;th st-sort="lastName">last name&lt;/th>
+		&lt;th st-sort="birthDate">birth date&lt;/th>
+		&lt;th st-sort="balance">balance&lt;/th>
+		&lt;th>email&lt;/th>
+	&lt;/tr>
+	&lt;tr>
+		&lt;th>
+			&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+		&lt;/th>
+		&lt;th colspan="4">
+			&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+		&lt;/th>
+	&lt;/tr>
+	&lt;/thead>
+	&lt;tbody>
+	&lt;tr ng-repeat="row in rowCollection">
+		&lt;td>{{row.firstName | uppercase}}&lt;/td>
+		&lt;td>{{row.lastName}}&lt;/td>
+		&lt;td>{{row.birthDate | date}}&lt;/td>
+		&lt;td>{{row.balance | currency}}&lt;/td>
+		&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+	&lt;/tr>
+	&lt;/tbody>
+&lt;/table></code></pre>
+        </tab>
+			 <tab heading="JavaScript">
+<pre><code class="language-javascript">app.controller('filterCtrl', ['$scope', '$filter', function (scope, filter) {
     scope.rowCollection = [
         {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
-
-    scope.columnCollection = [
-        {label: 'First Name', map: 'firstName'},
-        //the headerTemplateUrl property will be explained later, the purpose here is to show we can filter also by column only
-        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase', headerTemplateUrl: 'assets/template/customHeader.html'},
-        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
-        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
-        {label: 'e-mail', map: 'email', isSortable: false}
-    ];
-    scope.globalConfig = {
-        isGlobalSearchActivated: true
-    };
 }]);</code></pre>
-        </pane>
-        <pane heading="markup">
-<pre ng-non-bindable><code class="language-markup">&lt;div ng-controller="filterCtrl">
-    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
-&lt;/div></code></pre>
-        </pane>
-    </tabs>
-    <div class="table-container">
-        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
-    </div>
-    <h3>Use your own algorithm</h3>
-    <p>In the same way than for the sort operation you can use you own algorithm, you just have to specify the function you want to use in the global config
-        under the property <em>filterAlgorithm</em></p>
-<pre><code class="language-javascript">function customFilter(arrayRef, expression) {
-    //do some stuff
-    return filteredArray;
-}</code></pre>
+        </tab>
+    </tabset>
+	<div class="table-container">
+		<table st-table="rowCollection" class="table table-striped">
+			<thead>
+			<tr>
+				<th st-sort="firstName">first name</th>
+				<th st-sort="lastName">last name</th>
+				<th st-sort="birthDate">birth date</th>
+				<th st-sort="balance">balance</th>
+				<th>email</th>
+			</tr>
+			<tr>
+				<th>
+					<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+				</th>
+				<th colspan="4">
+					<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+				</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr ng-repeat="row in rowCollection">
+				<td>{{row.firstName | uppercase}}</td>
+				<td>{{row.lastName}}</td>
+				<td>{{row.birthDate | date}}</td>
+				<td>{{row.balance | currency}}</td>
+				<td><a ng-href="mailto:{{row.email}}">email</a></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-primary" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/filter"><i class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
+	</div>
 </section>

@@ -1,70 +1,65 @@
-<section id="section-selection" ng-controller="selectionCtrl">
-    <h2>Select data rows</h2>
-    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/selection"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>You can select data row according to two different modes : single or multiple (of course you can disable selection) by setting the global
-        property <em>selectionMode</em> to <em>single</em> or <em>multiple</em> (any other value will be taken as selectionMode='none'). This is the only time the table changes
-        a property value into your model: it add the "isSelected" property to your data model object. On one hand you can consider it "pollutes" your model but
-        on the other hand it allows the parent scope to quickly have a list of the selected items without relying on events. If you are in selectionMode="multiple" you can add a selection checkbox
-        column by setting the global property <em>displaySelectionCheckbox</em> to true</p>
-    <p class="note">Even though the configuration is dynamic the table does not prevent forbidden states : for example if you switch from selectionMode='single'
-        to 'none' with a selected item, the item will remain selected. It is the responsability of the parent scope/controller to reset the selected item</p>
-
-    <h3>Keep track of the changes in selection</h3>
-    <p>As mentioned before, whenever a row is selected/unselected the property isSelected change on the particular bound item. You can of course watch your model
-        to see when the selected items change however this is not really efficient regarding the performances. That is why an <em>selectionChange</em> event is emitted every time
-        there is something changed.
+<section class="clearfix" id="section-selection" ng-controller="selectionCtrl">
+    <h2 class="h2">Select data rows</h2>
+    <p class="text-justify">
+			The <code>stSelectRow</code> will make the rows selectable. Bind it with the rows and then set the selection mode with the <code>stSelectRow</code> plugin. If you don't specify the selection mode, it will be <em>single</em>
+			When a row is selected, the property <em>isSelected</em> is set to true on the row object and the class attribute <em>st-selected</em> is set on the tr element.
     </p>
 
-    <tabs>
-        <pane heading="javascript">
-<pre><code class="language-javascript">app.controller('selectionCtrl', ['$scope', function (scope) {
+    <tabset>
+        <tab heading="markup">
+<pre ng-non-bindable=""><code class="language-markup">&lt;table st-table="rowCollection" class="table">
+&lt;thead>
+&lt;tr>
+	&lt;th st-sort="firstName">first name&lt;/th>
+	&lt;th st-sort="lastName">last name&lt;/th>
+	&lt;th st-sort="birthDate">birth date&lt;/th>
+	&lt;th st-sort="balance">balance&lt;/th>
+	&lt;th>email&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr st-select-row="row" st-select-mode="multiple" ng-repeat="row in rowCollection">
+	&lt;td>{{row.firstName | uppercase}}&lt;/td>
+	&lt;td>{{row.lastName}}&lt;/td>
+	&lt;td>{{row.birthDate | date}}&lt;/td>
+	&lt;td>{{row.balance | currency}}&lt;/td>
+	&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table></code></pre></tab>
+			<tab heading="javascript">
+<pre><code class="language-javascript">app.controller('selectionCtrl', ['$scope', '$filter', function (scope, filter) {
     scope.rowCollection = [
         {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
-
-    scope.columnCollection = [
-        {label: 'First Name', map: 'firstName'},
-        {label: 'Last Name', map: 'lastName', formatFunction: 'uppercase'},
-        {label: 'Birth Date', map: 'birthDate', formatFunction: 'date'},
-        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
-        {label: 'e-mail', map: 'email'}
-    ];
-
-    //keep track of selected items
-    scope.$on('selectionChange', function (event, args) {
-        console.log(args);
-    });
-
-    scope.globalConfig = {
-        selectionMode: 'multiple',
-        displaySelectionCheckbox: true
-    };
 }]);</code></pre>
-        </pane>
-        <pane heading="markup">
-<pre><code class="language-markup">&lt;div ng-controller="selectionCtrl">
-    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
-&lt;/div></code></pre>
-        </pane>
-    </tabs>
-    <div class="table-container">
-        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
-    </div>
-    <div class="side-controls">
-        <label ng-show="canDisplayCheckbox()" for="selection-checkbox">display checkbox:</label>
-        <input ng-show="canDisplayCheckbox()" id="selection-checkbox" type="checkbox" ng-model="globalConfig.displaySelectionCheckbox"/>
-        <label>selection mode:</label>
-        <select ng-model="globalConfig.selectionMode">
-            <option value="none">none</option>
-            <option value="single">single</option>
-            <option value="multiple">multiple</option>
-        </select>
-    </div>
-    <ul class="output-list">
-        <li ng-repeat="row in rowCollection">{{ row | json}}</li>
-    </ul>
-
-
+        </tab>
+    </tabset>
+	<div class="table-container">
+		<table st-table="rowCollection" class="table">
+			<thead>
+			<tr>
+				<th st-sort="firstName">first name</th>
+				<th st-sort="lastName">last name</th>
+				<th st-sort="birthDate">birth date</th>
+				<th st-sort="balance">balance</th>
+				<th>email</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr st-select-row="row" st-select-mode="multiple" ng-repeat="row in rowCollection">
+				<td>{{row.firstName | uppercase}}</td>
+				<td>{{row.lastName}}</td>
+				<td>{{row.birthDate | date}}</td>
+				<td>{{row.balance | currency}}</td>
+				<td><a ng-href="mailto:{{row.email}}">email</a></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="text-center">
+		<a class="btn btn-primary" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/selection"><i class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
+	</div>
 </section>

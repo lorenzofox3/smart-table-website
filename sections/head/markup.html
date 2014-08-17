@@ -1,32 +1,61 @@
 <!doctype html>
 <html ng-app="app">
 <head>
-    <title>Smart Table documentation</title>
-    <script src="assets/lib/prism/prism.js"></script>
-    <script src="assets/lib/angular/angular.min.js"></script>
-    <script src="assets/lib/bootstrap/ui-bootstrap-custom-tpls-0.4.0-SNAPSHOT.js"></script>
-    <script src="assets/lib/smart-table/Smart-Table.debug.js"></script>
-    <script src="assets/js/app.js"></script>
-    <link rel="stylesheet" href="assets/css/mainStyle.css"/>
-    <!--<link rel="stylesheet" href="assets/css/bootstrap.css"/>-->
-    <link rel="stylesheet" href="assets/lib/prism/prism.css"/>
+	<title>Smart Table documentation</title>
+	<script src="assets/lib/prism/prism.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+	<script src="bower_components/angular-smart-table/dist/smart-table.min.js"></script>
+	<script src="assets/js/app.js"></script>
+	<link rel="stylesheet" href="assets/css/mainStyle.css"/>
+	<link rel="stylesheet" href="assets/lib/prism/prism.css"/>
+	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body ng-controller="mainCtrl">
-<header>
-    <h1 class="banner">Smart Table</h1>
-    <a class="git btn" href="https://github.com/lorenzofox3/Smart-Table"><i class="icon-white icon-download-alt"></i>Code on github</a>
-    <nav class="menu" scroll-treshold="100"><ul>
-        <li><a href="#section-intro">Introduction</a></li>
-        <li><a href="#section-basics">The basics</a></li>
-        <li><a href="#section-format">Format data</a></li>
-        <li><a href="#section-sort">Sort data</a></li>
-        <li><a href="#section-filter">Filter data</a></li>
-        <li><a href="#section-selection">Select row(s)</a></li>
-        <li><a href="#section-edit">Edit cell(s)</a></li>
-        <li><a href="#section-style">Simple style</a></li>
-        <li><a href="#section-cellTemplate">Cell template</a></li>
-        <li><a href="#section-pagination">Pagination</a></li>
-        <li><a href="#section-config">Summary</a></li>
-    </ul></nav>
+<body class="container-fluid" ng-controller="mainCtrl">
+<header class="navbar navbar-default navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-3"
+								ng-click="isCollapsed = !isCollapsed">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand visible-xs" href="#">Smart-Table</a>
+			</div>
+			<nav class="hidden-xs">
+				<ul class="nav navbar-nav">
+					<a href="#top" role="button" class="navbar-brand">
+						Smart-Table
+					</a>
+
+					<li><a href="#section-intro">Introduction</a></li>
+					<li><a href="#section-basics">The basics</a></li>
+					<li><a href="#section-format">Format/Template</a></li>
+					<li class="dropdown">
+						<a role="button" class="dropdown-toggle">
+							Plugins <b class="caret"></b>
+						</a>
+						<ul class="dropdown-menu">
+							<li><a href="#section-sort">Sort data</a></li>
+							<li><a href="#section-filter">Filter data</a></li>
+							<li><a href="#section-selection">Select row(s)</a></li>
+							<li><a href="#section-pagination">Pagination</a></li>
+							<li><a href="#section-custom">Custom</a></li>
+						</ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
+	</div>
 </header>
+<div class="header">
+	<h1 class="banner">Smart Table</h1>
+</p>
+</div>
+<div class="text-center"><a href="https://github.com/lorenzofox3/Smart-Table" class="btn btn-default btn-lg"><i class="glyphicon glyphicon-download"></i> Get the code</a></div>
 <div class="main">

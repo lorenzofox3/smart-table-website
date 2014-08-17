@@ -1,29 +1,61 @@
-<section id="section-pagination" ng-controller="paginationCtrl">
-    <h2>Client side Pagination</h2>
-    <a class="btn doc" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/pagination"><i class="icon icon-edit"></i></a><span class="bubble">improve the documentation</span>
-    <p>If you don't want to display too much data at the time you'll be happy using the pagination feature. It uses the <a href="https://github.com/angular-ui/bootstrap/tree/master/src/pagination">angular.ui-boostrap pagination directive</a> and you'll be able
-        to configure it through some global config properties. First of all, the property <em>isPaginationEnabled</em> must be set to true. Then you can decide the
-        number of pages you want to display with the <em>maxSize</em> property and the number of items you want to display on a page thanks to the <em>itemsByPage</em> property</p>
-    <ul class="note"><li>You may wonder why it has been decided to implement a client side pagination and not a server side pagination. Well in my opinion it does not
-        make sens to have the pagination on server side when you have the sort/filter on the client side. If you sort the data on the client side, but some are not loaded yet do you think the displayed
-        data are really relevant. I don't.</li>
-    <li>the event "pageChange" is emitted when the page is changed</li>
-    </ul>
+<section class="clearfix" id="section-pagination" ng-controller="paginationCtrl">
+	<h2 class="h2">Client side Pagination</h2>
 
-    <tabs>
-        <pane heading="JavaScript">
-<pre class="language-javascript"><code>app.controller('paginationCtrl', ['$scope', function (scope) {
+	<p class="text-center">
+		This is actually the only plugin which defines its own template. But the template fits good with the popular css
+		library <em>bootstrap</em> from Twitter.
+		You can also pass as parameters the number of pages you want to display and the number of items by page.
+	</p>
+	<tabset><tab heading="markup">
+<pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
+		&lt;thead>
+		&lt;tr>
+			&lt;th st-sort="firstName">first name&lt;/th>
+			&lt;th st-sort="lastName">last name&lt;/th>
+			&lt;th st-sort="birthDate">birth date&lt;/th>
+			&lt;th st-sort="balance">balance&lt;/th>
+			&lt;th>email&lt;/th>
+		&lt;/tr>
+		&lt;tr>
+			&lt;th>
+				&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+			&lt;/th>
+			&lt;th colspan="4">
+				&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+			&lt;/th>
+		&lt;/tr>
+		&lt;/thead>
+		&lt;tbody>
+		&lt;tr ng-repeat="row in rowCollection">
+			&lt;td>{{row.firstName | uppercase}}&lt;/td>
+			&lt;td>{{row.lastName}}&lt;/td>
+			&lt;td>{{row.birthDate | date}}&lt;/td>
+			&lt;td>{{row.balance | currency}}&lt;/td>
+			&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+		&lt;/tr>
+		&lt;/tbody>
+		&lt;tfoot>
+			&lt;tr>
+				&lt;td colspan="5" class="text-center">
+					&lt;div st-pagination="" st-items-by-page="15" st-displayed-pages="7">&lt;/div>
+				&lt;/td>
+			&lt;/tr>
+		&lt;/tfoot>
+	&lt;/table></code></pre>
+	</tab>
+		<tab heading="JavaScript">
+<pre><code class="language-javascript">app.controller('paginationCtrl', ['$scope', function (scope) {
     var
-            nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
-            familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
+        nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'],
+        familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
 
     function createRandomItem() {
         var
-                firstName = nameList[Math.floor(Math.random() * 4)],
-                lastName = familyName[Math.floor(Math.random() * 4)],
-                age = Math.floor(Math.random() * 100),
-                email = firstName + lastName + '@whatever.com',
-                balance = Math.random() * 3000;
+            firstName = nameList[Math.floor(Math.random() * 4)],
+            lastName = familyName[Math.floor(Math.random() * 4)],
+            age = Math.floor(Math.random() * 100),
+            email = firstName + lastName + '@whatever.com',
+            balance = Math.random() * 3000;
 
         return{
             firstName: firstName,
@@ -38,30 +70,48 @@
     for (var j = 0; j < 200; j++) {
         scope.rowCollection.push(createRandomItem());
     }
-
-    scope.columnCollection = [
-        {label: 'First Name', map: 'firstName'},
-        {label: 'Last Name', map: 'lastName'},
-        {label: 'Age', map: 'age'},
-        {label: 'Balance', map: 'balance', formatFunction: 'currency', formatParameter: '$'},
-        {label: 'e-mail', map: 'email'}
-    ];
-
-    scope.globalConfig = {
-        isPaginationEnabled: true,
-        itemsByPage: 12,
-        maxSize: 8
-    };
 }]);</code></pre>
-        </pane>
-        <pane heading="markup">
-<pre class="language-markup" ng-non-bindable><code>&lt;div ng-controller="paginationCtrl">
-    &lt;smart-table config="globalConfig" columns="columnCollection" rows="rowCollection">&lt;/smart-table>
-&lt;/div></code></pre>
-        </pane>
-    </tabs>
+		</tab>
+	</tabset>
+	<table st-table="rowCollection" class="table table-striped">
+		<thead>
+		<tr>
+			<th st-sort="firstName">first name</th>
+			<th st-sort="lastName">last name</th>
+			<th st-sort="birthDate">birth date</th>
+			<th st-sort="balance">balance</th>
+			<th>email</th>
+		</tr>
+		<tr>
+			<th>
+				<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+			</th>
+			<th colspan="4">
+				<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="row in rowCollection">
+			<td>{{row.firstName | uppercase}}</td>
+			<td>{{row.lastName}}</td>
+			<td>{{row.birthDate | date}}</td>
+			<td>{{row.balance | currency}}</td>
+			<td><a ng-href="mailto:{{row.email}}">email</a></td>
+		</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="5" class="text-center">
+					<div st-pagination="" st-items-by-page="15" st-displayed-pages="7"></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
 
-    <div class="table-container">
-        <smart-table class="table table-striped" config="globalConfig" columns="columnCollection" rows="rowCollection"></smart-table>
-    </div>
+	<div class="text-center">
+		<a class="btn btn-primary"
+			 href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/pagination"><i
+			class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
+	</div>
 </section>

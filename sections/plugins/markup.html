@@ -1,0 +1,109 @@
+<section class="clearfix" id="section-custom" ng-controller="customCtrl">
+		<h3 class="h3">Create you own plugin</h3>
+	<p class="text-justify">
+		It is pretty easy to plug your own plugin into smart table. You just have to require the main directive so you will get access to the controller API.
+		Let's have an example: I want my plugin to give me a way to select data with a check box.
+	</p>
+
+	<tabset>
+		<tab heading="Markup">
+			<pre ng-non-bindable="">
+				<code class="language-markup">
+&lt;table st-table="rowCollection" class="table">
+	&lt;thead>
+	&lt;tr>
+		&lt;th>&lt;/th>
+		&lt;th st-sort="firstName">first name&lt;/th>
+		&lt;th st-sort="lastName">last name&lt;/th>
+		&lt;th st-sort="birthDate">birth date&lt;/th>
+		&lt;th st-sort="balance">balance&lt;/th>
+		&lt;th>email&lt;/th>
+	&lt;/tr>
+	&lt;/thead>
+	&lt;tbody>
+	&lt;tr ng-repeat="row in rowCollection">
+		&lt;td cs-select="row">&lt;/td>
+		&lt;td>{{row.firstName | uppercase}}&lt;/td>
+		&lt;td>{{row.lastName}}&lt;/td>
+		&lt;td>{{row.birthDate | date}}&lt;/td>
+		&lt;td>{{row.balance | currency}}&lt;/td>
+		&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+	&lt;/tr>
+	&lt;/tbody>
+&lt;/table>
+				</code>
+			</pre>
+		</tab>
+		<tab heading="Javascript">
+			<pre ng-non-bindable="">
+				<code class="language-javascript">
+app.controller('customCtrl', ['$scope', function (scope) {
+    scope.rowCollection = [
+        {firstName: 'Laurent', lastName: 'Renard', birthDate: new Date('1987-05-21'), balance: 102, email: 'whatever@gmail.com'},
+        {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
+        {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
+    ];
+}]);
+app.directive('csSelect', function () {
+    return {
+        require: '^stTable',
+        template: '<input type="checkbox"/>',
+        scope: {
+            row: '=csSelect'
+        },
+        link: function (scope, element, attr, ctrl) {
+
+            element.bind('change', function (evt) {
+                scope.$apply(function () {
+                    ctrl.select(scope.row, 'multiple');
+                });
+            });
+
+            scope.$watch('row.isSelected', function (newValue, oldValue) {
+                if (newValue === true) {
+                    element.parent().addClass('st-selected');
+                } else {
+                    element.parent().removeClass('st-selected');
+                }
+            });
+        }
+    };
+});
+
+				</code>
+			</pre>
+		</tab>
+	</tabset>
+
+	<table st-table="rowCollection" class="table">
+		<thead>
+		<tr>
+			<th></th>
+			<th st-sort="firstName">first name</th>
+			<th st-sort="lastName">last name</th>
+			<th st-sort="birthDate">birth date</th>
+			<th st-sort="balance">balance</th>
+			<th>email</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr ng-repeat="row in rowCollection">
+			<td cs-select="row"></td>
+			<td>{{row.firstName | uppercase}}</td>
+			<td>{{row.lastName}}</td>
+			<td>{{row.birthDate | date}}</td>
+			<td>{{row.balance | currency}}</td>
+			<td><a ng-href="mailto:{{row.email}}">email</a></td>
+		</tr>
+		</tbody>
+	</table>
+
+	<h3 id="custom-build" class="h3">Custom build</h3>
+	<p>
+		You can easily custom you build of smart-table. Let's say, since you have created you custom selection directive, you don't want the
+		<em>stSelectRow</em> plugin in smart-table, so it will be even lighter than it is now. Go to the <a href="#">gulpFile</a> modify the the
+		<code>pluginList</code> variable, then run <code>gulp build</code> and here you are !
+	</p>
+
+
+</section>
