@@ -5,3 +5,57 @@ app.controller('basicsCtrl', ['$scope', function (scope) {
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
 }]);
+
+
+app.controller('safeCtrl', ['$scope', function ($scope) {
+
+    var firstnames = ['Laurent', 'Blandine', 'Olivier', 'Max'];
+    var lastnames = ['Renard', 'Faivre', 'Frere', 'Eponge'];
+    var dates = ['1987-05-21', '1987-04-25', '1955-08-27', '1966-06-06'];
+    var id = 1;
+
+    function generateRandomItem(id) {
+
+        var firstname = firstnames[Math.floor(Math.random() * 3)];
+        var lastname = lastnames[Math.floor(Math.random() * 3)];
+        var birthdate = dates[Math.floor(Math.random() * 3)];
+        var balance = Math.floor(Math.random() * 2000);
+
+        return {
+            id: id,
+            firstName: firstname,
+            lastName: lastname,
+            birthDate: new Date(birthdate),
+            balance: balance
+        }
+    }
+
+    $scope.rowCollection = [];
+
+    for (id; id < 5; id++) {
+        $scope.rowCollection.push(generateRandomItem(id));
+    }
+
+    $scope.displayedCollection = angular.copy($scope.rowCollection);
+
+    //add to the real data holder
+    $scope.addRandomItem = function addRandomItem() {
+        $scope.rowCollection.push(generateRandomItem(id));
+        id++;
+    };
+
+    //remove to the real data holder
+    $scope.removeItem = function removeItem(row) {
+        var i = 0, l = $scope.rowCollection.length, index = -1;
+        for (i; i < l; i++) {
+            if (angular.equals(row, $scope.rowCollection[i])) {
+                index = i;
+                break
+            }
+        }
+
+        if (index !== -1) {
+            $scope.rowCollection.splice(index, 1);
+        }
+    }
+}]);

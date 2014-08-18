@@ -26,10 +26,12 @@ app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     }
 
     function getAPage() {
-        $scope.rowCollection = [];
+        var newData=[];
         for (var j = 0; j < 20; j++) {
-            $scope.rowCollection.push(createRandomItem());
+            newData.push(createRandomItem());
         }
+
+        $scope.rowCollection = newData;
     }
 
     $scope.callServer = function getData(tableState) {
@@ -57,4 +59,6 @@ app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     };
 
     getAPage();
+
+    $scope.displayedCollection = angular.copy($scope.rowCollection);
 }]);
