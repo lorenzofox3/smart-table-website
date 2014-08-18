@@ -8,7 +8,7 @@
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">
-&lt;table st-table="displayedCollection" st-safe-src="rowCollection" st-pipe="callServer" class="table table-striped">
+&lt;table st-table="rowCollection"  st-pipe="callServer" class="table table-striped">
 	&lt;thead>
 	&lt;tr>
 		&lt;th st-sort="firstName">first name&lt;/th>
@@ -27,7 +27,7 @@
 	&lt;/tr>
 	&lt;/thead>
 	&lt;tbody ng-hide="isLoading">
-	&lt;tr ng-repeat="row in displayedCollection">
+	&lt;tr ng-repeat="row in rowCollection">
 		&lt;td>{{row.firstName | uppercase}}&lt;/td>
 		&lt;td>{{row.lastName}}&lt;/td>
 		&lt;td>{{row.birthDate | date}}&lt;/td>
@@ -71,12 +71,10 @@
     }
 
     function getAPage() {
-        var newData=[];
+        $scope.rowCollection=[];
         for (var j = 0; j < 20; j++) {
-            newData.push(createRandomItem());
+            $scope.rowCollection.push(createRandomItem());
         }
-
-        $scope.rowCollection = newData;
     }
 
     $scope.callServer = function getData(tableState) {
@@ -105,13 +103,12 @@
 
     getAPage();
 
-    $scope.displayedCollection = angular.copy($scope.rowCollection);
 }]);
 </code></pre>
 		</tab>
 	</tabset>
 	<div class="table-container">
-		<table st-table="displayedCollection" st-safe-src="rowCollection" st-pipe="callServer" class="table table-striped">
+		<table st-table="rowCollection" st-pipe="callServer" class="table table-striped">
 			<thead>
 			<tr>
 				<th st-sort="firstName">first name</th>
@@ -130,7 +127,7 @@
 			</tr>
 			</thead>
 			<tbody ng-hide="isLoading">
-			<tr ng-repeat="row in displayedCollection">
+			<tr ng-repeat="row in rowCollection">
 				<td>{{row.firstName | uppercase}}</td>
 				<td>{{row.lastName}}</td>
 				<td>{{row.birthDate | date}}</td>
