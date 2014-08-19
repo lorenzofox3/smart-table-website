@@ -44,16 +44,6 @@ app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
                 $scope.isLoading = false;
             }, 2000);
         }
-
-
-        //throttle to avoid an http request on every keystroke in the search fields for examples
-        if (promise !== null) {
-            $timeout.cancel(promise);
-        }
-        promise = $timeout(function () {
-            callServer();
-            promise = null;
-        }, 500);
     };
 
     getAPage();
