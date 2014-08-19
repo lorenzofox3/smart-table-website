@@ -7,13 +7,14 @@
     'use strict';
     ng.module('smart-table')
         .controller('stTableController', ['$scope', '$parse', '$filter', '$attrs', function StTableController($scope, $parse, $filter, $attrs) {
+
             var propertyName = $attrs.stTable;
             var displayGetter = $parse(propertyName);
             var displaySetter = displayGetter.assign;
             var safeGetter;
             var orderBy = $filter('orderBy');
             var filter = $filter('filter');
-            var safeCopy = ng.copy(displayGetter($scope));
+            var safeCopy = copyRefs(displayGetter($scope));
             var tableState = {
                 sort: {},
                 search: {},
@@ -24,16 +25,31 @@
             var pipeAfterSafeCopy = true;
             var ctrl = this;
 
+            function copyRefs(src) {
+                return [].concat(src);
+            }
+
+            function updateSafeCopy() {
+                safeCopy = copyRefs(safeGetter($scope));
+                if(pipeAfterSafeCopy === true){
+                    ctrl.pipe();
+                }
+            }
+
             if ($attrs.stSafeSrc) {
                 safeGetter = $parse($attrs.stSafeSrc);
-                $scope.$watchCollection(function () {
+                $scope.$watch(function () {
+                    return safeGetter($scope).length
+                }, function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        updateSafeCopy()
+                    }
+                });
+                $scope.$watch(function () {
                     return safeGetter($scope);
-                }, function (val) {
-                    if (val) {
-                        safeCopy = ng.copy(val);
-                        if (pipeAfterSafeCopy === true) {
-                            ctrl.pipe();
-                        }
+                }, function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        updateSafeCopy();
                     }
                 });
             }

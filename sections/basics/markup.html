@@ -68,8 +68,8 @@
 		Of course in this short example, smart-table does not bring much as we don't use any of the plugins but we are now ready to compose our table.
 	</p>
 
-	<p class="text-justify bg-danger padding">smart-table first creates a safe copy of your displayed collection, it will then modify the displayed collection (when sorting, filtering etc) based on its safe copy. So if you don't intend to modify the collection outside of the table, it will be all fine.
-		However, if you want to modify the collection (add, remove, edit) you will have to tell smart-table to watch the original collection so it can update its safe reference copy. This is were you use the <strong>stSafeSrc attribute</strong>
+	<p class="text-justify bg-danger padding">smart-table first creates a safe copy of your displayed collection: it creates an other array by copying the <strong>references</strong> of the items. It will then modify the displayed collection (when sorting, filtering etc) based on its safe copy. So if you don't intend to modify the collection outside of the table, it will be all fine.
+		However, if you want to modify the collection (add item, remove item) you will have to tell smart-table to watch the original collection so it can update its safe copy. This is were you use the <strong>stSafeSrc attribute</strong>
 	</p>
 
 	<h3 class="h3">stSafeSrc attribute</h3>
@@ -145,7 +145,8 @@
         $scope.rowCollection.push(generateRandomItem(id));
     }
 
-    $scope.displayedCollection = angular.copy($scope.rowCollection);
+    //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+    $scope.displayedCollection = [].concat($scope.rowCollection);
 
     //add to the real data holder
     $scope.addRandomItem = function addRandomItem() {
@@ -155,14 +156,7 @@
 
     //remove to the real data holder
     $scope.removeItem = function removeItem(row) {
-        var i = 0, l = $scope.rowCollection.length, index = -1;
-        for (i; i < l; i++) {
-            if (angular.equals(row, $scope.rowCollection[i])) {
-                index = i;
-                break
-            }
-        }
-
+        var index = $scope.rowCollection.indexOf(row);
         if (index !== -1) {
             $scope.rowCollection.splice(index, 1);
         }

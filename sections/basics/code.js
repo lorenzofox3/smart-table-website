@@ -36,7 +36,8 @@ app.controller('safeCtrl', ['$scope', function ($scope) {
         $scope.rowCollection.push(generateRandomItem(id));
     }
 
-    $scope.displayedCollection = angular.copy($scope.rowCollection);
+    //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
+    $scope.displayedCollection = [].concat($scope.rowCollection);
 
     //add to the real data holder
     $scope.addRandomItem = function addRandomItem() {
@@ -46,14 +47,7 @@ app.controller('safeCtrl', ['$scope', function ($scope) {
 
     //remove to the real data holder
     $scope.removeItem = function removeItem(row) {
-        var i = 0, l = $scope.rowCollection.length, index = -1;
-        for (i; i < l; i++) {
-            if (angular.equals(row, $scope.rowCollection[i])) {
-                index = i;
-                break
-            }
-        }
-
+        var index = $scope.rowCollection.indexOf(row);
         if (index !== -1) {
             $scope.rowCollection.splice(index, 1);
         }
