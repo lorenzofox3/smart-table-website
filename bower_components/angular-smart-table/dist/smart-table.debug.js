@@ -7,7 +7,6 @@
     'use strict';
     ng.module('smart-table')
         .controller('stTableController', ['$scope', '$parse', '$filter', '$attrs', function StTableController($scope, $parse, $filter, $attrs) {
-
             var propertyName = $attrs.stTable;
             var displayGetter = $parse(propertyName);
             var displaySetter = displayGetter.assign;
@@ -31,7 +30,7 @@
 
             function updateSafeCopy() {
                 safeCopy = copyRefs(safeGetter($scope));
-                if(pipeAfterSafeCopy === true){
+                if (pipeAfterSafeCopy === true) {
                     ctrl.pipe();
                 }
             }
@@ -138,13 +137,6 @@
                 $scope.$broadcast('st:splice', {start: start, number: number});
             };
 
-            /**
-             * return the currently displayed dataSet
-             * @returns [array] the currently displayed dataSet
-             */
-            this.dataSet = function getDataSet() {
-                return displayGetter($scope);
-            };
 
             /**
              * return the current state of the table
@@ -155,6 +147,22 @@
             };
 
             /**
+             * Use a different filter function than the angular FilterFilter
+             * @param filterName the name under which the custom filter is registered
+             */
+            this.setFilterFunction = function setFilterFunction(filterName) {
+                filter = $filter(filterName);
+            };
+
+            /**
+             *User a different function than the angular orderBy
+             * @param sortFunctionName the name under which the custom order function is registered
+             */
+            this.setSortFunction = function setSortFunction(sortFunctionName) {
+                orderBy = $filter(sortFunctionName);
+            };
+
+            /**
              * Usually when the safe copy is updated the pipe function is called.
              * Calling this method will prevent it, which is something required when using a custom pipe function
              */
@@ -162,36 +170,42 @@
                 pipeAfterSafeCopy = false;
             };
         }])
-        .directive('stTable', ['$parse', function ($parse) {
+        .directive('stTable', function () {
             return {
                 restrict: 'A',
                 controller: 'stTableController',
                 link: function (scope, element, attr, ctrl) {
                 }
             };
-        }]);
+        });
 })(angular);
 
 (function (ng) {
     'use strict';
     ng.module('smart-table')
-        .directive('stSearch', function () {
+        .directive('stSearch', ['$timeout', function ($timeout) {
             return {
                 replace: true,
                 require: '^stTable',
                 link: function (scope, element, attr, ctrl) {
                     var tableCtrl = ctrl;
                     var predicate = attr.stSearch || '';
+                    var promise = null;
+                    var throttle= attr.stDelay || 400;
 
                     element.bind('input', function (evt) {
                         evt = evt.originalEvent || evt;
-                        scope.$apply(function () {
+                        if (promise !== null) {
+                            $timeout.cancel(promise);
+                        }
+                        promise = $timeout(function () {
                             tableCtrl.search(evt.target.value, predicate);
-                        });
+                            promise = null;
+                        }, throttle);
                     });
                 }
             }
-        })
+        }])
 })(angular);
 
 (function (ng) {

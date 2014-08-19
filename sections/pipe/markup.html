@@ -79,16 +79,15 @@
 
     $scope.callServer = function getData(tableState) {
 
-        function callServer() {
-            //here you could create a query string from tableState
-            //fake ajax call
-            $scope.isLoading = true;
+				//here you could create a query string from tableState
+				//fake ajax call
+				$scope.isLoading = true;
 
-            $timeout(function () {
-                getAPage();
-                $scope.isLoading = false;
-            }, 2000);
-        }
+				$timeout(function () {
+						getAPage();
+						$scope.isLoading = false;
+				}, 2000);
+
     };
 
     getAPage();

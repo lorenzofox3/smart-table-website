@@ -8,7 +8,7 @@
             var safeGetter;
             var orderBy = $filter('orderBy');
             var filter = $filter('filter');
-            var safeCopy = ng.copy(displayGetter($scope));
+            var safeCopy = copyRefs(displayGetter($scope));
             var tableState = {
                 sort: {},
                 search: {},
@@ -19,16 +19,31 @@
             var pipeAfterSafeCopy = true;
             var ctrl = this;
 
+            function copyRefs(src) {
+                return [].concat(src);
+            }
+
+            function updateSafeCopy() {
+                safeCopy = copyRefs(safeGetter($scope));
+                if (pipeAfterSafeCopy === true) {
+                    ctrl.pipe();
+                }
+            }
+
             if ($attrs.stSafeSrc) {
                 safeGetter = $parse($attrs.stSafeSrc);
-                $scope.$watchCollection(function () {
+                $scope.$watch(function () {
+                    return safeGetter($scope).length
+                }, function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        updateSafeCopy()
+                    }
+                });
+                $scope.$watch(function () {
                     return safeGetter($scope);
-                }, function (val) {
-                    if (val) {
-                        safeCopy = ng.copy(val);
-                        if (pipeAfterSafeCopy === true) {
-                            ctrl.pipe();
-                        }
+                }, function (newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        updateSafeCopy();
                     }
                 });
             }
@@ -117,13 +132,6 @@
                 $scope.$broadcast('st:splice', {start: start, number: number});
             };
 
-            /**
-             * return the currently displayed dataSet
-             * @returns [array] the currently displayed dataSet
-             */
-            this.dataSet = function getDataSet() {
-                return displayGetter($scope);
-            };
 
             /**
              * return the current state of the table
@@ -134,6 +142,22 @@
             };
 
             /**
+             * Use a different filter function than the angular FilterFilter
+             * @param filterName the name under which the custom filter is registered
+             */
+            this.setFilterFunction = function setFilterFunction(filterName) {
+                filter = $filter(filterName);
+            };
+
+            /**
+             *User a different function than the angular orderBy
+             * @param sortFunctionName the name under which the custom order function is registered
+             */
+            this.setSortFunction = function setSortFunction(sortFunctionName) {
+                orderBy = $filter(sortFunctionName);
+            };
+
+            /**
              * Usually when the safe copy is updated the pipe function is called.
              * Calling this method will prevent it, which is something required when using a custom pipe function
              */
@@ -141,12 +165,12 @@
                 pipeAfterSafeCopy = false;
             };
         }])
-        .directive('stTable', ['$parse', function ($parse) {
+        .directive('stTable', function () {
             return {
                 restrict: 'A',
                 controller: 'stTableController',
                 link: function (scope, element, attr, ctrl) {
                 }
             };
-        }]);
+        });
 })(angular);

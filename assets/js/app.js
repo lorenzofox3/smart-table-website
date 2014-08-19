@@ -217,7 +217,7 @@ app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     }
 
     function getAPage() {
-        $scope.rowCollection=[];
+        $scope.rowCollection = [];
         for (var j = 0; j < 20; j++) {
             $scope.rowCollection.push(createRandomItem());
         }
@@ -225,16 +225,15 @@ app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
 
     $scope.callServer = function getData(tableState) {
 
-        function callServer() {
-            //here you could create a query string from tableState
-            //fake ajax call
-            $scope.isLoading = true;
+        //here you could create a query string from tableState
+        //fake ajax call
+        $scope.isLoading = true;
 
-            $timeout(function () {
-                getAPage();
-                $scope.isLoading = false;
-            }, 2000);
-        }
+        $timeout(function () {
+            getAPage();
+            $scope.isLoading = false;
+        }, 2000);
+
     };
 
     getAPage();
