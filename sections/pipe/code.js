@@ -1,8 +1,6 @@
 app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
     var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'];
     var familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-    var promise = null;
-
 
     $scope.isLoading = false;
     $scope.rowCollection = [];

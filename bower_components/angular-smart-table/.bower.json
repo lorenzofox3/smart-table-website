@@ -5,7 +5,7 @@
     "lorenzofox3 <laurent34azerty@gmail.com>"
   ],
   "description": "table module for angular",
-  "main": "dist smart-table.min.js",
+  "main": "dist/smart-table.min.js",
   "keywords": [
     "smart-table",
     "angular",
@@ -24,11 +24,11 @@
   "devDependencies": {
     "angular-mocks": "latest"
   },
-  "_release": "44439aa889",
+  "_release": "22282d5629",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "44439aa889370de7543316f2c201eb26777473e4"
+    "commit": "22282d5629ec88a038ec4bc491470d9859973aad"
   },
   "_source": "git://github.com/lorenzofox3/Smart-Table.git",
   "_target": "*",

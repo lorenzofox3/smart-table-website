@@ -2,9 +2,14 @@
     <h2 class="h2">Search/filter data</h2>
     <p>
 			The <code>stSearch</code> gives you a way to filter rows globally if you don't set any value to the attribute. Or you can also define the predicate to use as value of the directive attribute.
+			Use a property name between a single quote, or alternatively you can bind the predicate to a scope property
     </p>
     <tabset><tab heading="markup">
-<pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
+<pre ng-non-bindable><code class="language-markup">&lt;form>
+	&lt;label for="predicate">selected predicate:&lt;/label>
+	&lt;select class="form-control" id="predicate" ng-model="selectedPredicate" ng-options="predicate for predicate in predicates">&lt;/select>
+&lt;/form>
+&lt;table st-table="rowCollection" class="table table-striped">
 	&lt;thead>
 	&lt;tr>
 		&lt;th st-sort="firstName">first name&lt;/th>
@@ -15,10 +20,13 @@
 	&lt;/tr>
 	&lt;tr>
 		&lt;th>
-			&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+			&lt;input st-search="'firstName'" placeholder="search for firstname" class="input-sm form-control" type="search"/>
 		&lt;/th>
-		&lt;th colspan="4">
+		&lt;th colspan="3">
 			&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+		&lt;/th>
+		&lt;th>
+			&lt;input st-search="selectedPredicate" placeholder="bound predicate" class="input-sm form-control" type="search"/>
 		&lt;/th>
 	&lt;/tr>
 	&lt;/thead>
@@ -40,10 +48,17 @@
         {firstName: 'Blandine', lastName: 'Faivre', birthDate: new Date('1987-04-25'), balance: -2323.22, email: 'oufblandou@gmail.com'},
         {firstName: 'Francoise', lastName: 'Frere', birthDate: new Date('1955-08-27'), balance: 42343, email: 'raymondef@gmail.com'}
     ];
+
+    scope.predicates = ['firstName', 'lastName', 'birthDate', 'balance', 'email'];
+    scope.selectedPredicate = scope.predicates[0];
 }]);</code></pre>
         </tab>
     </tabset>
 	<div class="table-container">
+		<form>
+			<label for="predicate">selected predicate:</label>
+			<select class="form-control" id="predicate" ng-model="selectedPredicate" ng-options="predicate for predicate in predicates"></select>
+		</form>
 		<table st-table="rowCollection" class="table table-striped">
 			<thead>
 			<tr>
@@ -55,10 +70,13 @@
 			</tr>
 			<tr>
 				<th>
-					<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+					<input st-search="'firstName'" placeholder="search for firstname" class="input-sm form-control" type="search"/>
 				</th>
-				<th colspan="4">
+				<th colspan="3">
 					<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
+				</th>
+				<th>
+					<input st-search="selectedPredicate" placeholder="bound predicate" class="input-sm form-control" type="search"/>
 				</th>
 			</tr>
 			</thead>

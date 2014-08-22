@@ -38,7 +38,9 @@
             if ($attrs.stSafeSrc) {
                 safeGetter = $parse($attrs.stSafeSrc);
                 $scope.$watch(function () {
-                    return safeGetter($scope).length
+                    var safeSrc = safeGetter($scope);
+                    return safeSrc ? safeSrc.length : 0;
+
                 }, function (newValue, oldValue) {
                     if (newValue !== oldValue) {
                         updateSafeCopy()
@@ -63,7 +65,6 @@
                 tableState.sort.reverse = reverse === true;
                 tableState.pagination.start = 0;
                 this.pipe();
-                $scope.$broadcast('st:sort', {predicate: predicate});
             };
 
             /**
@@ -78,7 +79,6 @@
                 tableState.search.predicateObject = predicateObject;
                 tableState.pagination.start = 0;
                 this.pipe();
-                $scope.$broadcast('st:search', {input: input, predicate: predicate});
             };
 
             /**
@@ -114,17 +114,6 @@
             };
 
             /**
-             * reset the sorting state
-             */
-            this.reset = function reset() {
-                tableState.sort = {};
-                tableState.pagination.start = 0;
-                this.pipe();
-                $scope.$broadcast('st:reset');
-            };
-
-
-            /**
              * take a slice of the current sorted/filtered collection (pagination)
              *
              * @param start index of the slice
@@ -134,9 +123,7 @@
                 tableState.pagination.start = start;
                 tableState.pagination.number = number;
                 this.pipe();
-                $scope.$broadcast('st:splice', {start: start, number: number});
             };
-
 
             /**
              * return the current state of the table
@@ -187,11 +174,20 @@
             return {
                 replace: true,
                 require: '^stTable',
+                scope: {
+                    predicate: '=?stSearch'
+                },
                 link: function (scope, element, attr, ctrl) {
                     var tableCtrl = ctrl;
-                    var predicate = attr.stSearch || '';
                     var promise = null;
-                    var throttle= attr.stDelay || 400;
+                    var throttle = attr.stDelay || 400;
+
+                    scope.$watch('predicate', function (newValue, oldValue) {
+                        if (newValue !== oldValue) {
+                            ctrl.tableState().search = {};
+                            tableCtrl.search(element[0].value || '', newValue);
+                        }
+                    });
 
                     element.bind('input', function (evt) {
                         evt = evt.originalEvent || evt;
@@ -199,7 +195,7 @@
                             $timeout.cancel(promise);
                         }
                         promise = $timeout(function () {
-                            tableCtrl.search(evt.target.value, predicate);
+                            tableCtrl.search(evt.target.value, scope.predicate || '');
                             promise = null;
                         }, throttle);
                     });
@@ -269,7 +265,9 @@
                                 index++;
                                 var stateIndex = index % 2;
                                 if (index % 3 === 0) {
-                                    ctrl.reset();
+                                    //manual reset
+                                    ctrl.tableState().sort = {};
+                                    ctrl.tableState().pagination.start = 0;
                                 } else {
                                     ctrl.sortBy(predicate, stateIndex === 0);
                                     element
@@ -280,13 +278,16 @@
                         }
                     });
 
-                    scope.$on('st:sort', function (event, args) {
-                        if (args.predicate !== predicate) {
-                            reset();
+                    scope.$watch(function () {
+                        return ctrl.tableState().sort;
+                    }, function (newValue, oldValue) {
+                        if (newValue !== oldValue) {
+                            if (newValue.predicate !== predicate) {
+                                reset();
+                            }
                         }
-                    });
+                    }, true);
 
-                    scope.$on('st:reset', reset);
                 }
             };
         }])

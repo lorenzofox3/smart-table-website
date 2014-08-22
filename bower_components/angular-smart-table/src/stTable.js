@@ -33,7 +33,9 @@
             if ($attrs.stSafeSrc) {
                 safeGetter = $parse($attrs.stSafeSrc);
                 $scope.$watch(function () {
-                    return safeGetter($scope).length
+                    var safeSrc = safeGetter($scope);
+                    return safeSrc ? safeSrc.length : 0;
+
                 }, function (newValue, oldValue) {
                     if (newValue !== oldValue) {
                         updateSafeCopy()
@@ -58,7 +60,6 @@
                 tableState.sort.reverse = reverse === true;
                 tableState.pagination.start = 0;
                 this.pipe();
-                $scope.$broadcast('st:sort', {predicate: predicate});
             };
 
             /**
@@ -73,7 +74,6 @@
                 tableState.search.predicateObject = predicateObject;
                 tableState.pagination.start = 0;
                 this.pipe();
-                $scope.$broadcast('st:search', {input: input, predicate: predicate});
             };
 
             /**
@@ -109,17 +109,6 @@
             };
 
             /**
-             * reset the sorting state
-             */
-            this.reset = function reset() {
-                tableState.sort = {};
-                tableState.pagination.start = 0;
-                this.pipe();
-                $scope.$broadcast('st:reset');
-            };
-
-
-            /**
              * take a slice of the current sorted/filtered collection (pagination)
              *
              * @param start index of the slice
@@ -129,9 +118,7 @@
                 tableState.pagination.start = start;
                 tableState.pagination.number = number;
                 this.pipe();
-                $scope.$broadcast('st:splice', {start: start, number: number});
             };
-
 
             /**
              * return the current state of the table
