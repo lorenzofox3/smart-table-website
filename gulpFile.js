@@ -20,6 +20,7 @@ var html = ['sections/head/markup.html',
     'sections/pagination/markup.html',
     'sections/pipe/markup.html',
     'sections/plugins/markup.html',
+    'sections/examples/markup.html',
     'sections/foot/markup.html'];
 
 
@@ -36,7 +37,7 @@ gulp.task('js', function () {
         .pipe(gulp.dest(disFolder + 'js/'));
 });
 
-gulp.task('default',['js','html']);
+gulp.task('default', ['js', 'html']);
 
 
 
