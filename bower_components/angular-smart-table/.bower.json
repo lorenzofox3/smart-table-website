@@ -24,11 +24,11 @@
   "devDependencies": {
     "angular-mocks": "latest"
   },
-  "_release": "dfe2d6ed99",
+  "_release": "0ab5b59d15",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "dfe2d6ed99da268ba26759cd5456ed90f7194954"
+    "commit": "0ab5b59d158b3ca28a90382d5b86073ca6ae9295"
   },
   "_source": "git://github.com/lorenzofox3/Smart-Table.git",
   "_target": "*",
