@@ -160,7 +160,7 @@
 	</p>
 
 	<p class="text-justify bg-danger padding">smart-table first creates a safe copy of your displayed collection: it creates an other array by copying the <strong>references</strong> of the items. It will then modify the displayed collection (when sorting, filtering etc) based on its safe copy. So if you don't intend to modify the collection outside of the table, it will be all fine.
-		However, if you want to modify the collection (add item, remove item) you will have to tell smart-table to watch the original collection so it can update its safe copy. This is were you use the <strong>stSafeSrc attribute</strong>
+		However, if you want to modify the collection (add item, remove item), or **if you load your data asynchronously via AJAX-Call**  you will have to tell smart-table to watch the original collection so it can update its safe copy. This is were you use the <strong>stSafeSrc attribute</strong>
 	</p>
 
 	<h3 class="h3">stSafeSrc attribute</h3>
@@ -1033,7 +1033,7 @@ app.directive('csSelect', function () {
 
 	<h3 class="h3">Persist table state in local storage</h3>
 
-	<p>This [example](http://plnkr.co/edit/ekwiNt?p=preview) shows how to implement a plugin to persist table state in the local storage so you are able to restore you table when the page is refreshed.</p>
+	<p>This <a href="http://plnkr.co/edit/ekwiNt?p=preview">example</a> shows how to implement a plugin to persist table state in the local storage so you are able to restore you table when the page is refreshed.</p>
 
 	<div class="text-center">
 		<a class="btn btn-primary"
