@@ -23,6 +23,7 @@
             };
             var pipeAfterSafeCopy = true;
             var ctrl = this;
+            var lastSelected;
 
             function copyRefs(src) {
                 return [].concat(src);
@@ -104,13 +105,15 @@
              * @param {String} [mode] - "single" or "multiple" (multiple by default)
              */
             this.select = function select(row, mode) {
-                var rows = displayGetter($scope);
+                var rows = safeCopy;
                 var index = rows.indexOf(row);
                 if (index !== -1) {
                     if (mode === 'single') {
-                        ng.forEach(displayGetter($scope), function (value, key) {
-                            value.isSelected = key === index ? !value.isSelected : false;
-                        });
+                        row.isSelected = row.isSelected !== true;
+                        if (lastSelected) {
+                            lastSelected.isSelected = false;
+                        }
+                        lastSelected = row.isSelected === true ? row : undefined;
                     } else {
                         rows[index].isSelected = !rows[index].isSelected;
                     }
@@ -261,7 +264,9 @@
                     var predicate = attr.stSort;
                     var getter = $parse(predicate);
                     var index = 0;
-                    var states = ['natural', 'ascent', 'descent'];
+                    var classAscent = attr.stClassAscent || 'st-sort-ascent';
+                    var classDescent = attr.stClassDescent || 'st-sort-descent';
+                    var stateClasses = ['st-sort-natural', classAscent, classDescent];
 
                     //view --> table state
                     function sort() {
@@ -299,13 +304,13 @@
                         if (newValue.predicate !== predicate) {
                             index = 0;
                             element
-                                .removeClass('st-sort-ascent')
-                                .removeClass('st-sort-descent');
+                                .removeClass(classAscent)
+                                .removeClass(classDescent);
                         } else {
                             index = newValue.reverse === true ? 2 : 1;
                             element
-                                .removeClass('st-sort-' + states[(index + 1) % 2])
-                                .addClass('st-sort-' + states[index]);
+                                .removeClass(stateClasses[(index + 1) % 2])
+                                .addClass(stateClasses[index]);
                         }
                     }, true);
                 }
