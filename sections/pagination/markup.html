@@ -4,7 +4,8 @@
 	<p class="text-center">
 		This is actually the only plugin which defines its own template. But the template fits good with the popular css
 		library <em>bootstrap</em> from Twitter.
-		You can also pass as parameters the number of pages you want to display and the number of items by page.
+		You can also change the number of items by page dynamically with the bound attribute <code>st-items-by-page</code> and the number of displayed pages in the pagination directive with the attribute <code>st-displayed-pages</code>.
+		You can set these attributes to a static value as well
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
@@ -37,7 +38,7 @@
 		&lt;tfoot>
 			&lt;tr>
 				&lt;td colspan="5" class="text-center">
-					&lt;div st-pagination="" st-items-by-page="15" st-displayed-pages="7">&lt;/div>
+					&lt;div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7">&lt;/div>
 				&lt;/td>
 			&lt;/tr>
 		&lt;/tfoot>
@@ -66,6 +67,8 @@
         };
     }
 
+		scope.itemsByPage=15;
+
     scope.rowCollection = [];
     for (var j = 0; j < 200; j++) {
         scope.rowCollection.push(createRandomItem());
@@ -73,6 +76,10 @@
 }]);</code></pre>
 		</tab>
 	</tabset>
+
+	<label for="items">items by page</label>
+	<input class="input-sm form-control" name="items" id="items" type="number" ng-model="itemsByPage" />
+
 	<table st-table="rowCollection" class="table table-striped">
 		<thead>
 		<tr>
@@ -103,7 +110,7 @@
 		<tfoot>
 			<tr>
 				<td colspan="5" class="text-center">
-					<div st-pagination="" st-items-by-page="15" st-displayed-pages="7"></div>
+					<div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
 				</td>
 			</tr>
 		</tfoot>
