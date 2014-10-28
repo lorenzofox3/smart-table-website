@@ -769,8 +769,8 @@
 	<p>
 		This might be the most powerful plugin. When a directive calls the table controller api (sortBy, search, slice, ...) a variable representing the internal
 		table state is updated and a <em>pipe</em> function is called. By default it basically pipes the filter, sort and slice(pagination) operations on the bound array.
-		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function take as argument an object which represent
-		the table state.
+		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function take as arguments an object which represent
+		the table state, and a reference to the table controller.
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">
@@ -843,7 +843,7 @@
         }
     }
 
-    $scope.callServer = function getData(tableState) {
+    $scope.callServer = function getData(tableState, tableController) {
 
 				//here you could create a query string from tableState
 				//fake ajax call
