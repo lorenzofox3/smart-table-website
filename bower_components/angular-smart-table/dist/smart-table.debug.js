@@ -1,3 +1,7 @@
+/** 
+* @version 1.4.5
+* @license MIT
+*/
 (function (ng, undefined){
     'use strict';
 
@@ -47,7 +51,7 @@ ng.module('smart-table')
                 return safeSrc ? safeSrc.length : 0;
 
             }, function (newValue, oldValue) {
-                if (newValue !== oldValue) {
+                if (newValue !== safeCopy.length) {
                     updateSafeCopy();
                 }
             });
@@ -69,7 +73,7 @@ ng.module('smart-table')
             tableState.sort.predicate = predicate;
             tableState.sort.reverse = reverse === true;
             tableState.pagination.start = 0;
-            this.pipe();
+            return this.pipe();
         };
 
         /**
@@ -87,7 +91,7 @@ ng.module('smart-table')
             }
             tableState.search.predicateObject = predicateObject;
             tableState.pagination.start = 0;
-            this.pipe();
+            return this.pipe();
         };
 
         /**
@@ -137,7 +141,7 @@ ng.module('smart-table')
         this.slice = function splice(start, number) {
             tableState.pagination.start = start;
             tableState.pagination.number = number;
-            this.pipe();
+            return this.pipe();
         };
 
         /**
@@ -332,7 +336,12 @@ ng.module('smart-table')
                 stItemsByPage: '=?',
                 stDisplayedPages: '=?'
             },
-            templateUrl: 'template/smart-table/pagination.html',
+            templateUrl: function(element, attrs) {
+              if (attrs.stTemplate) {
+                return attrs.stTemplate;
+              }
+              return 'template/smart-table/pagination.html';
+            },
             link: function (scope, element, attrs, ctrl) {
 
                 scope.stItemsByPage = scope.stItemsByPage ? +(scope.stItemsByPage) : 10;
@@ -402,7 +411,7 @@ ng.module('smart-table')
                     if (ng.isFunction(scope.stPipe)) {
                         ctrl.preventPipeOnWatch();
                         ctrl.pipe = function () {
-                            scope.stPipe(ctrl.tableState(), ctrl);
+                            return scope.stPipe(ctrl.tableState(), ctrl);
                         }
                     }
                 }
