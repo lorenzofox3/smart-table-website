@@ -6,129 +6,169 @@
 		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function take as arguments an object which represent
 		the table state, and a reference to the table controller.
 	</p>
+	<p class="bg-info padding text-justify">
+		Note that if you want the pagination directive to update you must set in you pipe function the total number of pages as smart-table has no clue about your dataset and this information has to come
+		from you server
+	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">
-&lt;table st-table="rowCollection"  st-pipe="callServer" class="table table-striped">
+&lt;table class="table" st-pipe="mc.callServer" st-table="mc.displayed">
 	&lt;thead>
 	&lt;tr>
-		&lt;th st-sort="firstName">first name&lt;/th>
-		&lt;th st-sort="lastName">last name&lt;/th>
-		&lt;th st-sort="birthDate">birth date&lt;/th>
-		&lt;th st-sort="balance">balance&lt;/th>
-		&lt;th>email&lt;/th>
+		&lt;th st-sort="id">id&lt;/th>
+		&lt;th st-sort="name">name&lt;/th>
+		&lt;th st-sort="age">age&lt;/th>
+		&lt;th st-sort="saved">saved people&lt;/th>
 	&lt;/tr>
 	&lt;tr>
-		&lt;th>
-			&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
-		&lt;/th>
-		&lt;th colspan="4">
-			&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
-		&lt;/th>
+		&lt;th>&lt;input st-search="'id'"/>&lt;/th>
+		&lt;th>&lt;input st-search="'name'"/>&lt;/th>
+		&lt;th>&lt;input st-search="'age'"/>&lt;/th>
+		&lt;th>&lt;input st-search="'saved'"/>&lt;/th>
 	&lt;/tr>
 	&lt;/thead>
-	&lt;tbody ng-hide="isLoading">
-	&lt;tr ng-repeat="row in rowCollection">
-		&lt;td>{{row.firstName | uppercase}}&lt;/td>
-		&lt;td>{{row.lastName}}&lt;/td>
-		&lt;td>{{row.birthDate | date}}&lt;/td>
-		&lt;td>{{row.balance | currency}}&lt;/td>
-		&lt;td>&lt;a ng-href="mailto:{{row.email}}">email&lt;/a>&lt;/td>
+	&lt;tbody ng-show="!mc.isLoading">
+	&lt;tr ng-repeat="row in mc.displayed">
+		&lt;td>{{row.id}}&lt;/td>
+		&lt;td>{{row.name}}&lt;/td>
+		&lt;td>{{row.age}}&lt;/td>
+		&lt;td>{{row.saved}}&lt;/td>
 	&lt;/tr>
 	&lt;/tbody>
-	&lt;tbody ng-show="isLoading">
-			&lt;tr>
-				&lt;td colspan="5" class="text-center">&lt;div class="loading-indicator">&lt;/div>&lt;/td>
-			&lt;/tr>
+	&lt;tbody ng-show="mc.isLoading">
+	&lt;tr>
+		&lt;td colspan="4" class="text-center">Loading ... &lt;/td>
+	&lt;/tr>
 	&lt;/tbody>
-&lt;/table></code></pre>
+	&lt;tfoot>
+	&lt;tr>
+		&lt;td class="text-center" st-pagination="" st-item-by-page="10" colspan="4">
+		&lt;/td>
+	&lt;/tr>
+	&lt;/tfoot>
+&lt;/table>	
+</code></pre>
 	</tab>
-		<tab heading="JavaScript">
-<pre><code class="language-javascript">app.controller('pipeCtrl', ['$scope', '$timeout', function ($scope, $timeout) {
-    var nameList = ['Pierre', 'Pol', 'Jacques', 'Robert', 'Elisa'];
-    var familyName = ['Dupont', 'Germain', 'Delcourt', 'bjip', 'Menez'];
-    var promise = null;
+		<tab heading="Controller">
+<pre><code class="language-javascript">app.controller('pipeCtrl', ['Resource', function (service) {
 
+  var ctrl = this;
 
-    $scope.isLoading = false;
-    $scope.rowCollection = [];
+  this.displayed = [];
 
+  this.callServer = function callServer(tableState) {
 
-    function createRandomItem() {
-        var
-            firstName = nameList[Math.floor(Math.random() * 4)],
-            lastName = familyName[Math.floor(Math.random() * 4)],
-            age = Math.floor(Math.random() * 100),
-            email = firstName + lastName + '@whatever.com',
-            balance = Math.random() * 3000;
+    ctrl.isLoading = true;
 
-        return{
-            firstName: firstName,
-            lastName: lastName,
-            age: age,
-            email: email,
-            balance: balance
-        };
-    }
+    var pagination = tableState.pagination;
 
-    function getAPage() {
-        $scope.rowCollection=[];
-        for (var j = 0; j < 20; j++) {
-            $scope.rowCollection.push(createRandomItem());
-        }
-    }
+    var start = pagination.start || 0;
+    var number = pagination.number || 10;
 
-    $scope.callServer = function getData(tableState, tableController) {
+    service.getPage(start, number, tableState).then(function (result) {
+      ctrl.displayed = result.data;
+      tableState.pagination.numberOfPages = result.numberOfPages;//set the number of pages so the pagination can update
+      ctrl.isLoading = false;
+    });
+  };
 
-				//here you could create a query string from tableState
-				//fake ajax call
-				$scope.isLoading = true;
-
-				$timeout(function () {
-						getAPage();
-						$scope.isLoading = false;
-				}, 2000);
-
-    };
-
-    getAPage();
-
-}]);
+}])
 </code></pre>
 		</tab>
+		<tab heading="Service">
+			<pre><code class="language-javascript">
+	app.factory('Resource', ['$q', '$filter', '$timeout', function ($q, $filter, $timeout) {
+
+	//this would be the service to call your server, a standard bridge between your model an $http
+
+	// the database (normally on your server)
+	var randomsItems = [];
+
+	function createRandomItem(id) {
+		var heroes = ['Batman', 'Superman', 'Robin', 'Thor', 'Hulk', 'Niki Larson', 'Stark', 'Bob Leponge'];
+		return {
+			id: id,
+			name: heroes[Math.floor(Math.random() * 7)],
+			age: Math.floor(Math.random() * 1000),
+			saved: Math.floor(Math.random() * 10000)
+		};
+
+	}
+
+	for (var i = 0; i < 1000; i++) {
+		randomsItems.push(createRandomItem(i));
+	}
+
+
+	//fake call to the server, normally this service would serialize table state to send it to the server (with query parameters for example) and parse the response
+	//in our case, it actually performs the logic which would happened in the server
+	function getPage(start, number, params) {
+
+		var deferred = $q.defer();
+
+		var filtered = params.search.predicateObject ? $filter('filter')(randomsItems, params.search.predicateObject) : randomsItems;
+
+		if (params.sort.predicate) {
+			filtered = $filter('orderBy')(filtered, params.sort.predicate, params.sort.reverse);
+		}
+
+		var result = filtered.slice(start, start + number);
+
+		$timeout(function () {
+			//note, the server passes the information about the data set size
+			deferred.resolve({
+				data: result,
+				numberOfPages: Math.ceil(1000 / number)
+			});
+		}, 1500);
+
+
+		return deferred.promise;
+	}
+
+	return {
+		getPage: getPage
+	};
+
+}]);</code></pre>
+		</tab>
 	</tabset>
-	<div class="table-container">
-		<table st-table="rowCollection" st-pipe="callServer" class="table table-striped">
+	<div class="table-container" ng-controller="pipeCtrl as mc">
+		<table class="table" st-pipe="mc.callServer" st-table="mc.displayed">
 			<thead>
 			<tr>
-				<th st-sort="firstName">first name</th>
-				<th st-sort="lastName">last name</th>
-				<th st-sort="birthDate">birth date</th>
-				<th st-sort="balance">balance</th>
-				<th>email</th>
+				<th st-sort="id">id</th>
+				<th st-sort="name">name</th>
+				<th st-sort="age">age</th>
+				<th st-sort="saved">saved people</th>
 			</tr>
 			<tr>
-				<th>
-					<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
-				</th>
-				<th colspan="4">
-					<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
-				</th>
+				<th><input st-search="'id'"/></th>
+				<th><input st-search="'name'"/></th>
+				<th><input st-search="'age'"/></th>
+				<th><input st-search="'saved'"/></th>
 			</tr>
 			</thead>
-			<tbody ng-hide="isLoading">
-			<tr ng-repeat="row in rowCollection">
-				<td>{{row.firstName | uppercase}}</td>
-				<td>{{row.lastName}}</td>
-				<td>{{row.birthDate | date}}</td>
-				<td>{{row.balance | currency}}</td>
-				<td><a ng-href="mailto:{{row.email}}">email</a></td>
+			<tbody ng-show="!mc.isLoading">
+			<tr ng-repeat="row in mc.displayed">
+				<td>{{row.id}}</td>
+				<td>{{row.name}}</td>
+				<td>{{row.age}}</td>
+				<td>{{row.saved}}</td>
 			</tr>
 			</tbody>
-			<tbody ng-show="isLoading">
-					<tr>
-						<td colspan="5" class="text-center"><div class="loading-indicator"></div></td>
-					</tr>
+			<tbody ng-show="mc.isLoading">
+			<tr>
+				<td colspan="4" class="text-center"><div class="loading-indicator"></div>
+				</td>
+			</tr>
 			</tbody>
+			<tfoot>
+			<tr>
+				<td class="text-center" st-pagination="" st-item-by-page="10" colspan="4">
+				</td>
+			</tr>
+			</tfoot>
 		</table>
 	</div>
 	<p>Wow impressive, we just have plugged our table with a server. Of course in our example the data is random and not consistent with the event which triggered the request, but in reallity the server would sort, filter, slice according to the query</p>
