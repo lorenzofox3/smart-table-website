@@ -3,12 +3,12 @@
 	<p>
 		This might be the most powerful plugin. When a directive calls the table controller api (sortBy, search, slice, ...) a variable representing the internal
 		table state is updated and a <em>pipe</em> function is called. By default it basically pipes the filter, sort and slice(pagination) operations on the bound array.
-		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function take as arguments an object which represent
+		But with this directive you can overwrite the default pipe function which can be handy to call your server. The function takes as arguments, the object which represents
 		the table state, and a reference to the table controller.
 	</p>
 	<p class="bg-info padding text-justify">
-		Note that if you want the pagination directive to update you must set in you pipe function the total number of pages as smart-table has no clue about your dataset and this information has to come
-		from you server
+		Note that if you want the pagination directive to update, you must set in your pipe function, the total number of pages as smart-table has no clue about your dataset and this information has to come
+		from your server.
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">
@@ -42,7 +42,7 @@
 	&lt;/tbody>
 	&lt;tfoot>
 	&lt;tr>
-		&lt;td class="text-center" st-pagination="" st-item-by-page="10" colspan="4">
+		&lt;td class="text-center" st-pagination="" st-items-by-page="10" colspan="4">
 		&lt;/td>
 	&lt;/tr>
 	&lt;/tfoot>
@@ -62,8 +62,8 @@
 
     var pagination = tableState.pagination;
 
-    var start = pagination.start || 0;
-    var number = pagination.number || 10;
+    var start = pagination.start || 0;     // This is NOT the page number, but the index of item in the list that you want to use to display the table.
+    var number = pagination.number || 10;  // Number of entries showed per page.
 
     service.getPage(start, number, tableState).then(function (result) {
       ctrl.displayed = result.data;
