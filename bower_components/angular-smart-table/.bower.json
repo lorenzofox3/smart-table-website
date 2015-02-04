@@ -1,6 +1,6 @@
 {
   "name": "smart-table",
-  "version": "1.4.8",
+  "version": "1.4.10",
   "homepage": "https://github.com/lorenzofox3/Smart-Table",
   "authors": [
     "lorenzofox3 <laurent34azerty@gmail.com>"
@@ -26,11 +26,11 @@
     "angular-mocks": "latest",
     "jquery": "latest"
   },
-  "_release": "1.4.8",
+  "_release": "1.4.10",
   "_resolution": {
     "type": "version",
-    "tag": "v1.4.8",
-    "commit": "4e211648f69f2e14b43641e7ace79e9090ef15cc"
+    "tag": "v1.4.10",
+    "commit": "4114a8c0264e0cb88f8c926b4aa89944c2abd02b"
   },
   "_source": "git://github.com/lorenzofox3/Smart-Table.git",
   "_target": "~1.4.0",
