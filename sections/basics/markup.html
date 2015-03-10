@@ -76,7 +76,7 @@
 	
 	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute. You must use a seperate collection for both the base and safe collections or you may end up with an infinite loop.</p>
 
-	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
+	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. You must specify a **different object** (i.e. clone) for <code>st-safe-src</code> in order to avoid an infinite loop exception (**"Error: [$rootScope:infdig] 10 $digest() iterations reached. Aborting!"**). Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
 
 	<tabset>
 		<tab heading="Markup">
@@ -90,10 +90,10 @@
 		&lt;table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
 			&lt;thead>
 			&lt;tr>
-				&lt;th st-sort="firstName">first name&lt;/th>
-				&lt;th st-sort="lastName">last name&lt;/th>
-				&lt;th st-sort="birthDate">birth date&lt;/th>
-				&lt;th st-sort="balance">balance&lt;/th>
+				&lt;th>first name&lt;/th>
+				&lt;th>last name&lt;/th>
+				&lt;th>birth date&lt;/th>
+				&lt;th>balance&lt;/th>
 			&lt;/tr>
 			&lt;tr>
 				&lt;th colspan="5">&lt;input st-search="" class="form-control" placeholder="global search ..." type="text"/>&lt;/th>
@@ -177,10 +177,10 @@
 		<table st-table="displayedCollection" st-safe-src="rowCollection" class="table table-striped">
 			<thead>
 			<tr>
-				<th st-sort="firstName">first name</th>
-				<th st-sort="lastName">last name</th>
-				<th st-sort="birthDate">birth date</th>
-				<th st-sort="balance">balance</th>
+				<th>first name</th>
+				<th>last name</th>
+				<th>birth date</th>
+				<th>balance</th>
 			</tr>
 			<tr>
 				<th colspan="5"><input st-search="" class="form-control" placeholder="global search ..." type="text"/></th>
