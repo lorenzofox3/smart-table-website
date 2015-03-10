@@ -998,7 +998,7 @@ app.controller('customCtrl', ['$scope', function (scope) {
 app.directive('csSelect', function () {
     return {
         require: '^stTable',
-        template: '<input type="checkbox"/>',
+        template: '&lt;input type="checkbox" />',
         scope: {
             row: '=csSelect'
         },
