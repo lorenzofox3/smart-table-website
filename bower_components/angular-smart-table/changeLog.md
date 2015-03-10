@@ -98,3 +98,24 @@ function(tableState, tableController){
 
 * fix #284
 * fix #290
+
+## version 1.4.11
+
+* fix #296
+* add possibility to bind a callback when page changes
+
+## version 1.4.12
+
+* don't use pagination class twice
+* build improvement
+
+## version 1.4.13
+
+* use a global configuration
+* expose filtered collection result
+
+## version 2.0.0
+
+* use interpolation rather than binding for st-search directive (to avoid the creation of isolated scope)
+
+**This is a breaking change as now, you will have to remove the single quote around the predicate property name, and if you were using a binding, you'll have to interpolate it with the curly brace notation**

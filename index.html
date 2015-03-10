@@ -6,7 +6,7 @@
 	<script src="bower_components/angular/angular.min.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script src="bower_components/angular-smart-table/dist/smart-table.debug.js"></script>
+	<script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
 	<script src="assets/js/app.js"></script>
 	<link rel="stylesheet" href="assets/css/mainStyle.css"/>
 	<link rel="stylesheet" href="assets/lib/prism/prism.css"/>
@@ -73,7 +73,7 @@
 			easy to get into the source code to modify/customise the module to best fit your needs.
 	</ul>
 	</div>
-	<p>Although smart-table is from far the best table module for angular :D, there are other table modules in the
+	<p>Although smart-table is by far the best table module for angular :D, there are other table modules in the
 		angular ecosystem you might be interested in. The approach and philosophy are different and maybe more appropriate
 		to your way of building web application. Among the most popular:</p>
 	<ul>
@@ -169,7 +169,7 @@
 
 	<h3 class="h3">stSafeSrc attribute</h3>
 	
-	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute.</p>
+	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute. You must use a seperate collection for both the base and safe collections or you may end up with an infinite loop.</p>
 
 	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
 
@@ -483,7 +483,7 @@
     <h2 class="h2">Search/filter data</h2>
     <p>
 			The <code>stSearch</code> gives you a way to filter rows globally if you don't set any value to the attribute. Or you can also define the predicate to use as value of the directive attribute.
-			Use a property name between a single quote, or alternatively you can bind the predicate to a scope property
+			Use a property name, or alternatively you can interpolate the predicate with a scope property
     </p>
     <tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">&lt;form>
@@ -501,13 +501,13 @@
 	&lt;/tr>
 	&lt;tr>
 		&lt;th>
-			&lt;input st-search="'firstName'" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+			&lt;input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
 		&lt;/th>
 		&lt;th colspan="3">
 			&lt;input st-search placeholder="global search" class="input-sm form-control" type="search"/>
 		&lt;/th>
 		&lt;th>
-			&lt;input st-search="selectedPredicate" placeholder="bound predicate" class="input-sm form-control" type="search"/>
+			&lt;input st-search="{{selectedPredicate}}" placeholder="bound predicate" class="input-sm form-control" type="search"/>
 		&lt;/th>
 	&lt;/tr>
 	&lt;/thead>
@@ -551,13 +551,13 @@
 			</tr>
 			<tr>
 				<th>
-					<input st-search="'firstName'" placeholder="search for firstname" class="input-sm form-control" type="search"/>
+					<input st-search="firstName" placeholder="search for firstname" class="input-sm form-control" type="search"/>
 				</th>
 				<th colspan="3">
 					<input st-search placeholder="global search" class="input-sm form-control" type="search"/>
 				</th>
 				<th>
-					<input st-search="selectedPredicate" placeholder="bound predicate" class="input-sm form-control" type="search"/>
+					<input st-search="{{selectedPredicate}}" placeholder="bound predicate" class="input-sm form-control" type="search"/>
 				</th>
 			</tr>
 			</thead>
@@ -998,7 +998,7 @@ app.controller('customCtrl', ['$scope', function (scope) {
 app.directive('csSelect', function () {
     return {
         require: '^stTable',
-        template: '&lt;input type="checkbox" />',
+        template: '<input type="checkbox"/>',
         scope: {
             row: '=csSelect'
         },
