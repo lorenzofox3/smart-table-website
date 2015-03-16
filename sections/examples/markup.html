@@ -49,4 +49,29 @@
 		</iframe>
 	</div>
 
+  <h3 class="h3">Custom pagination</h3>
+  <p>This example shows how to use a custom template for the paginator, and how you can add more advanced functionality such as an input field to jump to any page easily (great for very large sets of data).</p>
+  <div class="text-center">
+    <iframe style="border: 1px solid #999;width: 80%; height: 560px"
+            src="http://embed.plnkr.co/LB2f9P" frameborder="0"
+            allowfullscreen="allowfullscreen">
+      Loading plunk...
+    </iframe>
+  </div>
+
+</section>
+
+<section class="clearfix">
+  <h2 class="h2">Global configuration</h2>
+
+  <p>Instead of changing configurable properties via attributes, you can inject <code>stConfig</code> during the configuration step, and change specific global configurable properties. <strong>Attributes will always override any global <code>stConfig</code> properties.</strong> <a href="https://github.com/lorenzofox3/Smart-Table/blob/master/src/stConfig.js">See the defaults here.</a> For example:</p>
+
+	<pre ng-non-bindable="">
+		<code class="language-javascript">
+      angular.module('myModule', []).
+      config(function(stConfig) {
+      stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
+      });</code>
+	</pre>
+
 </section>
