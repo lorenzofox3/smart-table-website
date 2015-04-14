@@ -1,7 +1,8 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');
 var disFolder = './assets/';
-var js = ['sections/head/code.js',
+var js = [
+    'sections/head/code.js',
     'sections/basics/code.js',
     'sections/format/code.js',
     'sections/sort/code.js',
@@ -9,8 +10,10 @@ var js = ['sections/head/code.js',
     'sections/selection/code.js',
     'sections/pagination/code.js',
     'sections/pipe/code.js',
-    'sections/plugins/code.js'];
-var html = ['sections/head/markup.html',
+    'sections/plugins/code.js'
+];
+var html = [
+    'sections/head/markup.html',
     'sections/introduction/markup.html',
     'sections/basics/markup.html',
     'sections/format/markup.html',
@@ -21,7 +24,8 @@ var html = ['sections/head/markup.html',
     'sections/pipe/markup.html',
     'sections/plugins/markup.html',
     'sections/examples/markup.html',
-    'sections/foot/markup.html'];
+    'sections/foot/markup.html'
+];
 
 
 //modules
