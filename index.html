@@ -472,11 +472,26 @@
 	</div>
 
 	<p class="bg-info padding text-justify">
-		Note you can ask to sort a column by default by adding the attribute <code>st-sort-default</code>. And if you set the value of this attribute to <code>"reverse"</code> then it will sort this column and reverse the order by default.
+		Note you can ask to sort a column by default by adding the attribute <code>st-sort-default="true"</code>. And if you set the value of this attribute to <code>"reverse"</code> then it will sort this column and reverse the order by default.
 	</p>
 
 	<p class="bg-info padding text-justify">
 		You can skip the "natural order" state by adding <code>st-skip-natural="true"</code> as attribute of your th element.
+	</p>
+
+	<p class="padding text-justify">
+		smart-table add css classes when the sort state changes <code>st-sort-ascent</code> and <code>st-sort-descent</code>. If you use a third party css framework with specific class names you can overwrite the default ones by passing the attributes
+		<code>st-class-ascent="myClassName"</code> and <code>st-class-descent="className"</code>.
+		The css used for this website is
+		<pre><code class="language-css">
+  .st-sort-ascent:before{
+    content: '\25B2';
+  }
+
+  .st-sort-descent:before{
+    content: '\25BC';
+  }
+</code></pre>
 	</p>
 
 	<div class="text-center"><a class="btn btn-primary" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/sort"><i
@@ -1129,13 +1144,10 @@ app.directive('csSelect', function () {
 
   <p>Instead of changing configurable properties via attributes, you can inject <code>stConfig</code> during the configuration step, and change specific global configurable properties. <strong>Attributes will always override any global <code>stConfig</code> properties.</strong> <a href="https://github.com/lorenzofox3/Smart-Table/blob/master/src/stConfig.js">See the defaults here.</a> For example:</p>
 
-	<pre ng-non-bindable="">
-		<code class="language-javascript">
-      angular.module('myModule', []).
-      config(function(stConfig) {
-      stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
-      });</code>
-	</pre>
+	<pre ng-non-bindable=""><code class="language-javascript">angular.module('myModule', [])
+	.config(function(stConfig) {
+		stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
+	});</code></pre>
 
 </section>
 </div>
