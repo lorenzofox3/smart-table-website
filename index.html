@@ -595,6 +595,11 @@
 		Note there is a throttle of 400 ms by default which you can overwrite with the attribute <code>st-delay</code>
 	</p>
 
+	<p class="bg-info padding text-justify">
+		By default the search will be triggered on the `input` event but you can change it using the attribute ``stInputEvent``
+		<pre ng-non-bindable><code class="language-markup">&lt;select stInputEvent="change" st-search="myProp">&lt;/select></code></pre>
+	</p>
+
 	<div class="text-center">
 		<a class="btn btn-primary" href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/filter"><i class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
 	</div>
@@ -967,8 +972,22 @@
 	</div>
 </section>
 
+<section class="clearfix">
+  <h2 class="h2">Global configuration</h2>
+
+  <p>Instead of changing configurable properties via attributes, you can inject <code>stConfig</code> during the
+    configuration step, and change specific global configurable properties. <strong>Attributes will always override any
+      global <code>stConfig</code> properties.</strong> <a
+      href="https://github.com/lorenzofox3/Smart-Table/blob/master/src/stConfig.js">See the defaults here.</a> For
+    example:</p>
+
+	<pre ng-non-bindable=""><code class="language-javascript">angular.module('myModule', []).config(function(stConfig) {
+  stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
+});</code></pre>
+
+</section>
 <section class="clearfix" id="section-custom" ng-controller="customCtrl">
-		<h3 class="h3">Create you own plugin</h3>
+		<h2 class="h2">Create you own plugin</h2>
 	<p class="text-justify">
 		It is pretty easy to plug your own plugin into smart table. You just have to require the main directive so you will get access to the controller API.
 		Let's have an example: I want my plugin to give me a way to select data with a check box.
@@ -1139,17 +1158,6 @@ app.directive('csSelect', function () {
 
 </section>
 
-<section class="clearfix">
-  <h2 class="h2">Global configuration</h2>
-
-  <p>Instead of changing configurable properties via attributes, you can inject <code>stConfig</code> during the configuration step, and change specific global configurable properties. <strong>Attributes will always override any global <code>stConfig</code> properties.</strong> <a href="https://github.com/lorenzofox3/Smart-Table/blob/master/src/stConfig.js">See the defaults here.</a> For example:</p>
-
-	<pre ng-non-bindable=""><code class="language-javascript">angular.module('myModule', [])
-	.config(function(stConfig) {
-		stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
-	});</code></pre>
-
-</section>
 </div>
 <footer class="padding" id="main-footer" class="center-block">
 	<p class=" padding text-center">

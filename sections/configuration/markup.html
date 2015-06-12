@@ -1,0 +1,14 @@
+<section class="clearfix">
+  <h2 class="h2">Global configuration</h2>
+
+  <p>Instead of changing configurable properties via attributes, you can inject <code>stConfig</code> during the
+    configuration step, and change specific global configurable properties. <strong>Attributes will always override any
+      global <code>stConfig</code> properties.</strong> <a
+      href="https://github.com/lorenzofox3/Smart-Table/blob/master/src/stConfig.js">See the defaults here.</a> For
+    example:</p>
+
+	<pre ng-non-bindable=""><code class="language-javascript">angular.module('myModule', []).config(function(stConfig) {
+  stConfig.pagination.template = 'my-custom-pagination-tmpl.html';
+});</code></pre>
+
+</section>

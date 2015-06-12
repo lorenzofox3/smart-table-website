@@ -128,3 +128,15 @@ function(tableState, tableController){
 
 * add debounce to custom pipe function to make sure tableState is stable
 * fix #329
+
+## version 2.0.3
+
+* implements #379
+* fix #390
+
+## version 2.1.0
+
+* support nested search (thanks to @jansabbe)
+* fix #254
+* fix wrong path to default config for stSkipNatural (@phuvo)
+* fix #406
