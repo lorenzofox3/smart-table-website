@@ -1,6 +1,6 @@
 {
   "name": "angular-smart-table",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "homepage": "https://github.com/lorenzofox3/Smart-Table",
   "authors": [
     "lorenzofox3 <laurent34azerty@gmail.com>"
@@ -20,17 +20,17 @@
     "tests"
   ],
   "dependencies": {
-    "angular": "latest"
+    "angular": "^1.0.0"
   },
   "devDependencies": {
-    "angular-mocks": "latest",
-    "jquery": "latest"
+    "angular-mocks": "^1.0.0",
+    "jquery": "^2.0.0"
   },
-  "_release": "2.1.0",
+  "_release": "2.1.1",
   "_resolution": {
     "type": "version",
-    "tag": "v2.1.0",
-    "commit": "502122526d2ab258621c8771e2a84217c60e6f0d"
+    "tag": "v2.1.1",
+    "commit": "443b90708a0da94c81c73c0762816c19c15ee55c"
   },
   "_source": "git://github.com/lorenzofox3/Smart-Table.git",
   "_target": "^2.0.0",
