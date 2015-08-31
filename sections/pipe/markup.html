@@ -12,7 +12,7 @@
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">
-&lt;table class="table" st-pipe="mc.callServer" st-table="mc.displayed">
+&lt;table class="table" st-pipe="callServer" st-table="displayed">
 	&lt;thead>
 	&lt;tr>
 		&lt;th st-sort="id">id&lt;/th>
@@ -27,15 +27,15 @@
 		&lt;th>&lt;input st-search="saved"/>&lt;/th>
 	&lt;/tr>
 	&lt;/thead>
-	&lt;tbody ng-show="!mc.isLoading">
-	&lt;tr ng-repeat="row in mc.displayed">
+	&lt;tbody ng-show="!isLoading">
+	&lt;tr ng-repeat="row in displayed">
 		&lt;td>{{row.id}}&lt;/td>
 		&lt;td>{{row.name}}&lt;/td>
 		&lt;td>{{row.age}}&lt;/td>
 		&lt;td>{{row.saved}}&lt;/td>
 	&lt;/tr>
 	&lt;/tbody>
-	&lt;tbody ng-show="mc.isLoading">
+	&lt;tbody ng-show="isLoading">
 	&lt;tr>
 		&lt;td colspan="4" class="text-center">Loading ... &lt;/td>
 	&lt;/tr>
