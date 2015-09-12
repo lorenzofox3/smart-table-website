@@ -62,7 +62,7 @@ app.controller('pipeCtrl', ['Resource', function (service) {
         //note, the server passes the information about the data set size
         deferred.resolve({
           data: result,
-          numberOfPages: Math.ceil(1000 / number)
+          numberOfPages: Math.ceil(filtered.length / number)
         });
       }, 1500);
 
