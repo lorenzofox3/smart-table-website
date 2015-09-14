@@ -1270,58 +1270,73 @@ app.directive('csSelect', function () {
 </section>
 
 <section class="clearfix" id="examples-section">
-	<h2 class="h2">More sophisticated examples</h2>
+  <h2 class="h2">More sophisticated examples</h2>
 
-	<p>This section aims to provide example to show how you can compose around smart-table. They remain basic but can
-		give ideas and inspiration.</p>
+  <p>This section aims to provide example to show how you can compose around smart-table. They remain basic but can
+    give ideas and inspiration.</p>
 
-	<h3 class="h3">Draggable headers</h3>
+  <h3 class="h3">Draggable headers</h3>
 
-	<p>An example on how to implement draggable headers so the row template can be reordered. It uses <a href="https://github.com/lorenzofox3/lrDragNDrop">lrDragNDrop</a> for the drag and drop logic.</p>
+  <p>An example on how to implement draggable headers so the row template can be reordered. It uses <a
+    href="https://github.com/lorenzofox3/lrDragNDrop">lrDragNDrop</a> for the drag and drop logic.</p>
 
-	<div class="text-center">
-		<iframe style="border: 1px solid #999;width: 80%; height: 500px"
-						src="http://embed.plnkr.co/DRagFo" frameborder="0"
-						allowfullscreen="allowfullscreen">
-			Loading plunk...
-		</iframe>
-	</div>
+  <div class="text-center">
+    <iframe style="border: 1px solid #999;width: 80%; height: 500px"
+            src="http://embed.plnkr.co/DRagFo" frameborder="0"
+            allowfullscreen="allowfullscreen">
+      Loading plunk...
+    </iframe>
+  </div>
 
-	<h3 class="h3">Pagination on scroll</h3>
+  <h3 class="h3">Pagination on scroll</h3>
 
-	<p>This example shows how to implement pagination on scroll and remove the previous tr nodes as the user scroll down.
-		You will need to implement the same kind of logic when scrolling up though. The scroll logic is based on <a href="https://github.com/lorenzofox3/lrInfiniteScroll">lrInfiniteScroll</a></p>
+  <p>This example shows how to implement pagination on scroll and remove the previous tr nodes as the user scroll down.
+    You will need to implement the same kind of logic when scrolling up though. The scroll logic is based on <a
+      href="https://github.com/lorenzofox3/lrInfiniteScroll">lrInfiniteScroll</a></p>
 
-	<div class="text-center">
-		<iframe style="border: 1px solid #999;width: 80%; height: 500px"
-						src="http://embed.plnkr.co/Qq2yfC" frameborder="0"
-						allowfullscreen="allowfullscreen">
-			Loading plunk...
-		</iframe>
-	</div>
+  <div class="text-center">
+    <iframe style="border: 1px solid #999;width: 80%; height: 500px"
+            src="http://embed.plnkr.co/Qq2yfC" frameborder="0"
+            allowfullscreen="allowfullscreen">
+      Loading plunk...
+    </iframe>
+  </div>
 
-	<h3 class="h3">Persist table state in local storage</h3>
+  <h3 class="h3">Persist table state in local storage</h3>
 
-	<p>This <a href="http://plnkr.co/edit/ekwiNt?p=preview">example</a> shows how to implement a plugin to persist table state in the local storage so you are able to restore you table when the page is refreshed.</p>
+  <p>This <a href="http://plnkr.co/edit/ekwiNt?p=preview">example</a> shows how to implement a plugin to persist table
+    state in the local storage so you are able to restore you table when the page is refreshed.</p>
 
-	<div class="text-center">
-		<a class="btn btn-primary"
-			 href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/examples"><i
-			class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
-	</div>
+  <div class="text-center">
+    <a class="btn btn-primary"
+       href="https://github.com/lorenzofox3/smart-table-website/tree/gh-pages/sections/examples"><i
+      class="glyphicon glyphicon-pencil"></i> improve the documentation</a>
+  </div>
 
-	<h3 class="h3">Fix headers</h3>
-	<p>This example shows how to have fix headers with a pure css solution. It is also responsive as based on the flex-model. A directive has been added to be able to change the space ratio occupied by each column.</p>
-	<div class="text-center">
-		<iframe style="border: 1px solid #999;width: 80%; height: 500px"
-						src="http://embed.plnkr.co/fcdXKE" frameborder="0"
-						allowfullscreen="allowfullscreen">
-			Loading plunk...
-		</iframe>
-	</div>
+  <h3 class="h3">Fix headers</h3>
+
+  <p>This example shows how to have fix headers with a pure css solution. It is also responsive as based on the
+    flex-model. A directive has been added to be able to change the space ratio occupied by each column.</p>
+
+  <div class="text-center">
+    <iframe style="border: 1px solid #999;width: 80%; height: 500px"
+            src="http://embed.plnkr.co/fcdXKE" frameborder="0"
+            allowfullscreen="allowfullscreen">
+      Loading plunk...
+    </iframe>
+  </div>
+
+  <p>If you want sticky headers you can have a look at <a href="https://github.com/lorenzofox3/lrStickyHeader">lrStickyHeader</a>
+    and its specific
+    <a href="https://github.com/lorenzofox3/stStickyHeader">smart-table directive</a></p>
+
+  <div class="text-center"><img src="http://i.imgur.com/ocN250H.gif" alt="sticky table header"/></div>
 
   <h3 class="h3">Custom pagination</h3>
-  <p>This example shows how to use a custom template for the paginator, and how you can add more advanced functionality such as an input field to jump to any page easily (great for very large sets of data).</p>
+
+  <p>This example shows how to use a custom template for the paginator, and how you can add more advanced functionality
+    such as an input field to jump to any page easily (great for very large sets of data).</p>
+
   <div class="text-center">
     <iframe style="border: 1px solid #999;width: 80%; height: 560px"
             src="http://embed.plnkr.co/LB2f9P" frameborder="0"
