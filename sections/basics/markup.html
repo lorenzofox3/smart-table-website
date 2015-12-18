@@ -74,7 +74,7 @@
 
 	<h3 class="h3">stSafeSrc attribute</h3>
 	
-	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute. You must use a seperate collection for both the base and safe collections or you may end up with an infinite loop.</p>
+	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute. You must use a seperate collection for both the base and safe collections or you may end up with an infinite loop. Please note that you should use the <strong>displayedCollection</strong> with the <strong>ng-repeat</strong> attribute at the tbody.</p>
 
 	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
 
