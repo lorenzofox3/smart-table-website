@@ -36,9 +36,6 @@ app.controller('safeCtrl', ['$scope', function ($scope) {
         $scope.rowCollection.push(generateRandomItem(id));
     }
 
-    //copy the references (you could clone ie angular.copy but then have to go through a dirty checking for the matches)
-    $scope.displayedCollection = [].concat($scope.rowCollection);
-
     //add to the real data holder
     $scope.addRandomItem = function addRandomItem() {
         $scope.rowCollection.push(generateRandomItem(id));
