@@ -6,6 +6,12 @@
 		library <em>bootstrap</em> from Twitter.
 		You can also change the number of items by page dynamically with the bound attribute <code>st-items-by-page</code> and the number of displayed pages in the pagination directive with the attribute <code>st-displayed-pages</code>.
 		You can set these attributes to a static value as well
+		</p>
+	<p class="text-center">
+		If you are querying data asynchronously, change your query results array <code>st-table="rowCollection"</code> to 
+		<code>st-safe-src="rowCollection"</code> and create a new name for <code>st-table</code> array (for example <code>st-table="displayedCollection"</code>).
+		Smart-table will automatically pass the <code>st-safe-src</code> array to <code>st-table</code> array.
+		Replace <code>ng-repeat="row in rowCollection"</code> with the new array <code>ng-repeat="row in displayedCollection"</code>.
 	</p>
 	<tabset><tab heading="markup">
 <pre ng-non-bindable><code class="language-markup">&lt;table st-table="rowCollection" class="table table-striped">
