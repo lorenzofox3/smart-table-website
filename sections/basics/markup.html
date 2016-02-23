@@ -78,6 +78,7 @@
 
 	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
 
+	<p class="text-justify">If you are starting with the basic table above, change <code>st-table="rowCollection"</code> to a new name (eg. <code>st-table="displayedCollection"</code>) and add your original table dataset to <code>st-safe-src="rowCollection"</code>. Change your repeating table data  to <code>ng-repeat="displayedCollection"</code>.</p>
 	<tabset>
 		<tab heading="Markup">
 <pre ng-non-bindable><code class="language-markup">	&lt;div ng-controller="safeCtrl">
@@ -100,7 +101,7 @@
 			&lt;/tr>
 			&lt;/thead>
 			&lt;tbody>
-			&lt;tr ng-repeat="row in displayedCollection">
+			&lt;tr ng-repeat="row in displayedCollection"> &lt;!-- ensure collection matches st-table name --> 
 				&lt;td>{{row.firstName}}&lt;/td>
 				&lt;td>{{row.lastName}}&lt;/td>
 				&lt;td>{{row.birthDate}}&lt;/td>
