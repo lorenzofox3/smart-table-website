@@ -6,7 +6,7 @@
 			application.
 			Then use the markup you would normally do
 			for html tables. On the table element add the <code>st-table</code> attribute to tell smart-table which collection
-			holds your <strong>displayed data</strong>, (ie the one you are going to use in the repeater). Now you will be able to compose the table using the plugins.
+			holds your <strong>displayed data</strong>, (i.e., the one you are going to use in the repeater). Now you will be able to compose the table using the plugins.
 		</p>
 	</div>
 			<tabset>
@@ -68,15 +68,15 @@
 		Of course in this short example, smart-table does not bring much as we don't use any of the plugins but we are now ready to compose our table.
 	</p>
 
-	<p class="text-justify bg-danger padding">smart-table first creates a safe copy of your displayed collection: it creates an other array by copying the <strong>references</strong> of the items. It will then modify the displayed collection (when sorting, filtering etc) based on its safe copy. So if you don't intend to modify the collection outside of the table, it will be all fine.
-		However, if you want to modify the collection (add item, remove item), or <strong>if you load your data asynchronously (via AJAX-Call, timeout, etc)</strong> you will have to tell smart-table to watch the original collection so it can update its safe copy. This is were you use the <strong>stSafeSrc attribute</strong>
+	<p class="text-justify bg-danger padding">smart-table first creates a safe copy of your displayed collection: it creates another array by copying the <strong>references</strong> of the items. It will then modify the displayed collection (when sorting, filtering, etc.) based on its safe copy. So if you don't intend to modify the collection outside of the table, it will be all fine.
+		However, if you want to modify the collection (add item, remove item), or <strong>if you load your data asynchronously (via AJAX-Call, timeout, etc.)</strong> you will have to tell smart-table to watch the original collection so it can update its safe copy. This is where you use the <strong>stSafeSrc attribute</strong>.
 	</p>
 
 	<h3 class="h3">stSafeSrc attribute</h3>
 	
-	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc) you must use the stSafeSrc attribute. You must use a seperate collection for both the base and safe collections or you may end up with an infinite loop.</p>
+	<p class="text-justify bg-danger padding">If you are bringing in data asynchronously (from a remote database, restful endpoint, ajax call, etc.) you must use the stSafeSrc attribute. You must use a separate collection for both the base and safe collections or you may end up with an infinite loop.</p>
 
-	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced</p>
+	<p class="text-justify">Use it to tell smart-table which collection to watch if you intend to modify its content. Don't pay attention to the sort and filter directives for the moment but use the table and note how the data is correctly synced.</p>
 
 	<tabset>
 		<tab heading="Markup">
