@@ -10,12 +10,12 @@
   "author": "Laurent Renard",
   "license": "MIT",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.1"
+    "grunt": "^1.0.1",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-copy": "^1.0.0"
   },
   "dependencies": {
-    "gulp": "^3.8.7",
+    "gulp": "^3.9.1",
     "gulp-concat": "^2.3.4"
   }
 }
