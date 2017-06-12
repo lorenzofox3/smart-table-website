@@ -3,14 +3,14 @@
 <head>
 	<title>Smart Table documentation</title>
 	<script src="assets/lib/prism/prism.js"></script>
-	<script src="bower_components/angular/angular.min.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
-	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-	<script src="bower_components/angular-smart-table/dist/smart-table.js"></script>
+	<script src="node_modules/angular/angular.min.js"></script>
+	<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+	<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+	<script src="node_modules/angular-smart-table/dist/smart-table.js"></script>
 	<script src="assets/js/app.js"></script>
 	<link rel="stylesheet" href="assets/css/mainStyle.css"/>
 	<link rel="stylesheet" href="assets/lib/prism/prism.css"/>
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body class="container-fluid" ng-controller="mainCtrl">
@@ -24,26 +24,21 @@
 			<li><a href="#section-intro">Introduction</a></li>
 			<li><a href="#section-basics">The basics</a></li>
 			<li><a href="#section-format">Format/Template</a></li>
-            <li class="dropdown">
-                <a role="button" class="dropdown-toggle">
+            <li uib-dropdown class="dropdown">
+                <a role="button" uib-dropdown-toggle class="dropdown-toggle">
                     Filter data <b class="caret"></b>
                 </a>
-                <ul class="dropdown-menu">
+                <ul uib-dropdown-menu class="dropdown-menu">
                     <li><a href="#section-filter">Search plugin</a></li>
                     <li><a href="#filter-strict-mode">Strict mode</a></li>
                     <li><a href="#filter-custom-plugin">Custom search plugins</a></li>
                 </ul>
             </li>
-			<li class="dropdown">
-				<a role="button" class="dropdown-toggle">
+			<li uib-dropdown class="dropdown">
+				<a role="button" uib-dropdown-toggle class="dropdown-toggle">
 					Plugins <b class="caret"></b>
 				</a>
-				<ul class="dropdown-menu">
-                    <!--<li class="dropdown-header">Filter data</li>-->
-                    <!--<li><a href="#section-filter">stSearch plugin</a></li>-->
-                    <!--<li><a href="#filter-strict-mode">Strict mode</a></li>-->
-                    <!--<li><a href="#filter-custom-plugin">Custom search plugins</a></li>-->
-                    <!--<li class="dropdown-header">Other plugins</li>-->
+				<ul class="dropdown-menu" uib-dropdown-menu>
 					<li><a href="#section-sort">Sort data</a></li>
 					<li><a href="#section-selection">Select row(s)</a></li>
 					<li><a href="#section-pagination">Pagination</a></li>

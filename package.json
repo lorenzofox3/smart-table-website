@@ -10,11 +10,15 @@
   "author": "Laurent Renard",
   "license": "MIT",
   "devDependencies": {
+    "angular-ui-bootstrap": "^2.5.0",
     "grunt": "^1.0.1",
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0"
   },
   "dependencies": {
+    "angular": "^1.6.4",
+    "angular-smart-table": "^2.1.8",
+    "bootstrap": "^3.3.7",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.3.4"
   }
