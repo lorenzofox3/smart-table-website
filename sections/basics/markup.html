@@ -7,6 +7,12 @@
 			Then use the markup you would normally do
 			for html tables. On the table element add the <code>st-table</code> attribute to tell smart-table which collection
 			holds your <strong>displayed data</strong>, (i.e., the one you are going to use in the repeater). Now you will be able to compose the table using the plugins.
+			
+			Note: the striped formatting is provided by Bootstrap (the <code> class="table table-striped" </code> part). Hence, in order to make the table formatted as below 
+			you will need to attach bootstrap to your html. 
+			There are many ways of doing this (which you can find on the Bootstrap website). One way is as follows:
+			<code> <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>      
+      <script src="node_modules/angular-smart-table/dist/smart-table.min.js"></script> </code>
 		</p>
 	</div>
 			<tabset>
