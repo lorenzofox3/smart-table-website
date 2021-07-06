@@ -20,10 +20,10 @@ app.controller('paginationCtrl', ['$scope', function (scope) {
         };
     }
 
-    scope.itemsByPage = 15;
+    $scope.itemsByPage = 15;
 
-    scope.rowCollection = [];
+    $scope.rowCollection = [];
     for (var j = 0; j < 200; j++) {
-        scope.rowCollection.push(createRandomItem());
+        $scope.rowCollection.push(createRandomItem());
     }
 }]);
